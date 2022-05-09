@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_terrain_unsat_blue"
+    tools:context=".TrainingActivity">
+
+    <Button
+        android:id="@+id/btnBackA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:text="@string/retour"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/btnStopA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/arret_d_urgence"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/btnLaunchA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/fini"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnBackA"
+        app:layout_constraintStart_toStartOf="@+id/btnBackA"
+        tools:ignore="TextContrastCheck" />
+
+    <LinearLayout
+        android:id="@+id/layoutControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/btnStopA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvAngle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/angle"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="TextContrastCheck" />
+
+            <TextView
+                android:id="@+id/tvAngleUp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="TextContrastCheck" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sbAngle"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:progress="50"
+            android:progressTint="#BEFFFFFF"
+            android:thumb="@drawable/ic_baseline_lens_24" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/ibPlusAngle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/plus"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck"
+                tools:srcCompat="@drawable/plus" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/ibMinusAngle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/minus"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/minus"
+                tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hauteur"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="TextContrastCheck" />
+
+            <TextView
+                android:id="@+id/tvHeightUp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sbHeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="50"
+            android:progressTint="#BFFFFFFF"
+            android:thumb="@drawable/ic_baseline_lens_24" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/ibPlusHeight"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/plus"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/plus"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck,ImageContrastCheck" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/ibMinusHeight"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/minus"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/minus"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck,ImageContrastCheck" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRandMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mode_aleatoire"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/btnLaunchA"
+        app:layout_constraintEnd_toEndOf="@+id/btnBackA"
+        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintStart_toStartOf="@+id/btnBackA"
+        app:layout_constraintTop_toBottomOf="@+id/btnBackA"
+        app:layout_constraintVertical_bias="0.64"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/btnPosMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mode_positions"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/btnLaunchA"
+        app:layout_constraintEnd_toEndOf="@+id/btnBackA"
+        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintStart_toStartOf="@+id/btnBackA"
+        app:layout_constraintTop_toBottomOf="@+id/btnBackA"
+        app:layout_constraintVertical_bias="0.32999998"
+        tools:ignore="TextContrastCheck" />
+
+    <LinearLayout
+        android:id="@+id/layoutRand"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/graphics"
+        app:layout_constraintEnd_toEndOf="@+id/graphics"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/graphics"
+        app:layout_constraintTop_toTopOf="@+id/graphics"
+        app:layout_constraintVertical_bias="0.05"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/archivo_black"
+            android:shadowColor="#FFFFFF"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="1.6"
+            android:text="@string/mode_aleatoire"
+            android:textColor="@color/red_ball"
+            android:textSize="30sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvRand"
+                android:layout_width="213dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alatsi"
+                android:shadowColor="@color/white"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1.6"
+                android:text="@string/button_next"
+                android:textAlignment="center"
+                android:textColor="@color/red_ball"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnChangeRand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00FFFFFF"
+                android:contentDescription="@string/descr_bouton_rand"
+                app:srcCompat="@drawable/ic_baseline_change_circle_24" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <p2i.bocciapp.Graphics
+        android:id="@+id/graphics"
+        android:layout_width="311dp"
+        android:layout_height="338dp"
+        app:layout_constraintBottom_toBottomOf="@+id/layoutControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/layoutControls"
+        app:layout_constraintVertical_bias="0.289"
+        tools:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

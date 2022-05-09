@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_terrain_unsat_purple"
+    tools:context=".MatchActivity">
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#D84559"
+        android:text="@string/suivant"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        tools:ignore="TextContrastCheck"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="84dp"
+        android:background="#D84559"
+        android:backgroundTint="#D84559"
+        android:textAlignment="center"
+        android:textColor="#FBFBFB"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btnStart"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#D84559"
+        android:text="@string/arret_d_urgence"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="TextContrastCheck" />
+
+    <ImageView
+        android:id="@+id/ivEndM"
+        android:layout_width="670dp"
+        android:layout_height="119dp"
+        android:contentDescription="@string/end_match"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fin_du_match"
+        tools:ignore="ImageContrastCheck"
+        tools:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.582"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.917"
+        tools:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/btnLeft"
+            android:layout_width="120dp"
+            android:layout_height="96dp"
+            android:adjustViewBounds="false"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/arrow_left"
+            tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnUp"
+                android:layout_width="120dp"
+                android:layout_height="96dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/arrow_up"
+                tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck" />
+
+            <Space
+                android:layout_width="120dp"
+                android:layout_height="24dp" />
+
+            <ImageButton
+                android:id="@+id/btnDown"
+                android:layout_width="120dp"
+                android:layout_height="96dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/arrow_down"
+                tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnRight"
+            android:layout_width="120dp"
+            android:layout_height="96dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/arrow_right"
+            tools:ignore="ContentDescription,InefficientWeight,SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="visible">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D84559"
+            android:text="@string/retour"
+            android:textColor="#FFFFFF"
+            tools:ignore="TextContrastCheck" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/btnCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#D84559"
+            android:text="@string/arbitre"
+            android:textColor="#FFFFFF"
+            tools:ignore="TextContrastCheck" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutBalls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivBall1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/boccia_ball"
+                tools:ignore="ContentDescription,ImageContrastCheck"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/ivBall2"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/boccia_ball"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/ivBall3"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/boccia_ball"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvBalls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alatsi"
+            android:text="@string/balles_restantes"
+            android:textColor="#FFFFFF"
+            tools:ignore="TextContrastCheck" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLaunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#D84559"
+        android:text="@string/fini"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tvN1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="76dp"
+        android:shadowColor="#000000"
+        android:shadowDx="10"
+        android:shadowDy="10"
+        android:shadowRadius="1.6"
+        android:text="TE VOICI DANS LE MODE"
+        android:textAlignment="center"
+        android:textColor="@color/red_ball"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/ivBox"
+        app:layout_constraintEnd_toEndOf="@+id/ivBox"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="@+id/ivBox"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvN2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/archivo_black"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="1.6"
+        android:text="MATCH"
+        android:textAlignment="center"
+        android:textColor="#0B0B0B"
+        android:textSize="60sp"
+        app:layout_constraintBottom_toTopOf="@+id/ivBox"
+        app:layout_constraintEnd_toEndOf="@+id/tvN1"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/tvN1"
+        app:layout_constraintTop_toBottomOf="@+id/tvN1"
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivBox"
+        android:layout_width="520dp"
+        android:layout_height="162dp"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.69"
+        app:srcCompat="@drawable/yellow_box"
+        tools:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivN1"
+        android:layout_width="483dp"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/ivBox"
+        app:layout_constraintEnd_toEndOf="@+id/ivBox"
+        app:layout_constraintHorizontal_bias="0.567"
+        app:layout_constraintStart_toStartOf="@+id/ivBox"
+        app:layout_constraintTop_toBottomOf="@+id/tvN2"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/avant_de_lancer"
+        tools:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivBox2"
+        android:layout_width="466dp"
+        android:layout_height="151dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/yellow_box" />
+
+    <ImageView
+        android:id="@+id/ivInstructs"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/ivBox2"
+        app:layout_constraintEnd_toEndOf="@+id/ivBox2"
+        app:layout_constraintStart_toStartOf="@+id/ivBox2"
+        app:layout_constraintTop_toTopOf="@+id/ivBox2"
+        app:srcCompat="@drawable/instructs" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

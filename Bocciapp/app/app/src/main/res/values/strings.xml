@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Bocciapp</string>
+    <string name="retour">Retour</string>
+    <string name="arret_d_urgence">Arret d\'urgence</string>
+    <string name="suivant">Suivant</string>
+    <string name="fini">fini !</string>
+    <string name="angle">Angle :</string>
+    <string name="hauteur">Hauteur :</string>
+    <string name="arbitre">Arbitre</string>
+    <string name="balles_restantes">Balles restantes</string>
+    <string name="match">MATCH</string>
+    <string name="entrainement">ENTRAINEMENT</string>
+    <string name="welcome_to_bocciap">Welcome to BOCCIAP</string>
+    <string name="adresse_ip">Adresse IP</string>
+    <string name="port">Port</string>
+    <string name="ok">OK</string>
+    <string name="mode_match_intro">Te voici dans le mode match. Informations avant de lancer la partie. Appuie sur le bouton \"arrêt d\'urgence\" ou \"appel à l\'arbitre\" en cas de besoin. Tu disposes d\'une minute pour chaque tir. Tu devras effectuer 3 tirs au total.</string>
+    <string name="instruct_match">Informations sur le fonctionnement. Choisis la hauteur de ton plateau à l\'aide des flèches directionnelles, puis tire ta balle et appuie sur le bouton \"fini\".</string>
+    <string name="end_match">Fin du match. Bravo a toi ! A la prochaine !</string>
+    <string name="mode_positions">Mode positions</string>
+    <string name="mode_aleatoire">MODE ALEATOIRE</string>
+    <string name="button_next">Essaye d\'atteindre la position ! \n \n Appuie sur le bouton ci-contre pour changer de position</string>
+    <string name="descr_bouton_rand">Bouton rond rouge avec deux flèches transparentes pour changer la position aléatoire</string>
+</resources>
