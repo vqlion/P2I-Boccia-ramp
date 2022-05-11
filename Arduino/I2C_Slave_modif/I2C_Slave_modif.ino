@@ -1,7 +1,7 @@
 /*
- * This sketch is uploaded to an arduino board, which is then supposed to be controlled 
- * by another arduino board (in this case a NodeMCU) via I2C.
- * The code for the I2C part is mainly inspired by cunchem https://github.com/cunchem/I2C_esp8266ToArduinoUno
+   This sketch is uploaded to an arduino board, which is then supposed to be controlled
+   by another arduino board (in this case a NodeMCU) via I2C.
+   The code for the I2C part is mainly inspired by cunchem https://github.com/cunchem/I2C_esp8266ToArduinoUno
 */
 
 
@@ -17,6 +17,8 @@ const int PWN_B = 11;
 const int DIR_A = 12;
 const int DIR_B = 13;
 
+char msgCode[3];
+
 String messageNode;
 boolean match;
 
@@ -27,10 +29,10 @@ void setup() {
   Serial.begin(115200);           /* start serial for debug */
   encA.write(0);
   encB.write(0);
-  pinMode(12, OUTPUT);    //pin Direction
-  pinMode(3, OUTPUT);    //pin PWM
-  pinMode(13, OUTPUT);
-  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);    //pin Direction A
+  pinMode(3, OUTPUT);    //pin PWM A
+  pinMode(13, OUTPUT);  //pin Direction B
+  pinMode(11, OUTPUT);  //pin PWN B
   analogWrite(11, 0);
   analogWrite(3, 0);
 }
@@ -44,14 +46,9 @@ void loop() {
   Serial.print(" ; ");
   Serial.println(valB);
 
-  char msgCode[] = {'a', 'a', 'a'};
 
   if (messageNode.length() == 3) {
-    msgCode[0] = messageNode.charAt(0);
-    msgCode[1] = messageNode.charAt(1);
-    msgCode[2] = messageNode.charAt(2);
-    Serial.println(" | coded as : " + String(msgCode[0]) + "   " + String(msgCode[1]) + "   " + String(msgCode[2]));
-    messageNode = "";
+    messageNode = decodeMessage(messageNode);
   }
 
   switch (msgCode[0]) {
@@ -67,34 +64,58 @@ void loop() {
       }
       break;
     case 's':  //stops the robot (emergency stop or call)
-      analogWrite(3, 0);
+      motors(PWN_A, 0, HIGH);
+      motors(PWN_B, 0, HIGH);
       break;
     case 'm':  //command to move the motors
       switch (msgCode[1]) {
         case 's':
-          analogWrite(3, 0);
-          analogWrite(PWN_B, 0);
+          switch (msgCode[2]) {
+            case 'l' : case 'r' :
+              motors(PWN_A, 0, HIGH);
+              break;
+            case 'u': case 'd':
+              motors(PWN_B, 0, HIGH);
+              break;
+          }
           break;
         case 'l':
-          analogWrite(3, 100);
-          digitalWrite(12, HIGH);
+          motors(PWN_A, 100, HIGH);
           break;
         case 'r':
-          analogWrite(3, 100);
-          digitalWrite(12, LOW);
+          motors(PWN_A, 100, LOW);
           break;
         case 'u':
-          analogWrite(PWN_B, 100);
-          digitalWrite(DIR_B, HIGH);
+          motors(PWN_B, 100, HIGH);
           break;
         case 'd':
-          analogWrite(PWN_B, 100);
-          digitalWrite(DIR_B, LOW);
+          motors(PWN_B, 100, LOW);
           break;
       }
       break;
   }
 
+}
+
+void motors(int motor, int value, int dir) {
+  switch (motor) {
+    case PWN_A:
+      analogWrite(PWN_A, value);
+      digitalWrite(DIR_A, dir);
+      break;
+    case PWN_B:
+      analogWrite(PWN_B, value);
+      digitalWrite(DIR_B, dir);
+      break;
+  }
+}
+
+String decodeMessage(String msgNode) {
+  msgCode[0] = msgNode.charAt(0);
+  msgCode[1] = msgNode.charAt(1);
+  msgCode[2] = msgNode.charAt(2);
+  Serial.println(" | coded as : " + String(msgCode[0]) + "   " + String(msgCode[1]) + "   " + String(msgCode[2]));
+  return "";
 }
 
 // function that executes whenever data is received from master

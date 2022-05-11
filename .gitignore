@@ -85,3 +85,4 @@ lint/tmp/
 # lint/reports/
 
 **/desktop.ini
+Bocciapp/app/.idea/gradle.xml
