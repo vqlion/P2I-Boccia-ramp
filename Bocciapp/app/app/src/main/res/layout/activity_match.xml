@@ -8,6 +8,20 @@
     android:background="@drawable/background_terrain_unsat_purple"
     tools:context=".MatchActivity">
 
+    <ImageButton
+        android:id="@+id/btnIns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ic_baseline_info_24"
+        android:backgroundTint="#00FFFFFF"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintStart_toEndOf="@+id/btnStop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_info_24"
+        android:contentDescription="@string/bouton_information" />
+
     <Button
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
@@ -75,7 +89,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.917"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ImageButton
             android:id="@+id/btnLeft"
@@ -238,7 +252,7 @@
         android:shadowDx="10"
         android:shadowDy="10"
         android:shadowRadius="1.6"
-        android:text="TE VOICI DANS LE MODE"
+        android:text="@string/te_voici_dans_le_mode"
         android:textAlignment="center"
         android:textColor="@color/red_ball"
         android:textSize="48sp"
@@ -258,7 +272,7 @@
         android:shadowDx="5"
         android:shadowDy="5"
         android:shadowRadius="1.6"
-        android:text="MATCH"
+        android:text="@string/match"
         android:textAlignment="center"
         android:textColor="#0B0B0B"
         android:textSize="60sp"
@@ -283,7 +297,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.69"
         app:srcCompat="@drawable/yellow_box"
-        tools:visibility="gone" />
+        tools:visibility="gone"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/ivN1"
@@ -297,7 +312,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tvN2"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/avant_de_lancer"
-        tools:visibility="gone" />
+        tools:visibility="gone"
+        android:contentDescription="@string/debut_match" />
 
     <ImageView
         android:id="@+id/ivBox2"
@@ -308,7 +324,9 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/yellow_box" />
+        app:srcCompat="@drawable/yellow_box"
+        tools:visibility="gone"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/ivInstructs"
@@ -319,6 +337,62 @@
         app:layout_constraintEnd_toEndOf="@+id/ivBox2"
         app:layout_constraintStart_toStartOf="@+id/ivBox2"
         app:layout_constraintTop_toTopOf="@+id/ivBox2"
-        app:srcCompat="@drawable/instructs" />
+        app:srcCompat="@drawable/instructs"
+        tools:visibility="gone"
+        android:contentDescription="@string/instructions_match" />
+
+    <LinearLayout
+        android:id="@+id/layoutButtonsBig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnLeftBig"
+            android:layout_width="180dp"
+            android:layout_height="192dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            app:srcCompat="@drawable/arrow_left"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnUpBig"
+                android:layout_width="180dp"
+                android:layout_height="192dp"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/arrow_up"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/btnDownBig"
+                android:layout_width="180dp"
+                android:layout_height="192dp"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/arrow_down"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnRightBig"
+            android:layout_width="180dp"
+            android:layout_height="192dp"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            app:srcCompat="@drawable/arrow_right"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

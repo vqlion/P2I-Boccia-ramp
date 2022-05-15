@@ -2,9 +2,11 @@ package p2i.bocciapp;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -48,6 +50,16 @@ public class MatchActivity extends AppCompatActivity {
     ImageButton btnLeft;
     ImageButton btnRight;
     LinearLayout layoutButtons;
+
+    ImageButton btnDownBig;
+    ImageButton btnUpBig;
+    ImageButton btnLeftBig;
+    ImageButton btnRightBig;
+    LinearLayout layoutButtonsBig;
+
+    ImageButton btnIns;
+
+    boolean ins;
 
     TextView tvBalls;
     LinearLayout layoutBalls;
@@ -104,6 +116,8 @@ public class MatchActivity extends AppCompatActivity {
         //init of the views and their visibility at the beginning
         baseView = findViewById(R.id.constraintLayout);
 
+        ins = true;
+
         ivEnd = (ImageView) findViewById(R.id.ivEndM);
         ivEnd.setVisibility(View.GONE);
         ivBox = (ImageView) findViewById(R.id.ivBox);
@@ -142,6 +156,16 @@ public class MatchActivity extends AppCompatActivity {
         btnLeft = (ImageButton) findViewById(R.id.btnLeft);
         btnRight = (ImageButton) findViewById(R.id.btnRight);
         layoutButtons.setVisibility(View.GONE);
+
+        layoutButtonsBig = (LinearLayout) findViewById(R.id.layoutButtonsBig);
+        btnDownBig = (ImageButton) findViewById(R.id.btnDownBig);
+        btnUpBig = (ImageButton) findViewById(R.id.btnUpBig);
+        btnLeftBig = (ImageButton) findViewById(R.id.btnLeftBig);
+        btnRightBig = (ImageButton) findViewById(R.id.btnRightBig);
+        layoutButtonsBig.setVisibility(View.GONE);
+
+        btnIns = (ImageButton) findViewById(R.id.btnIns);
+        btnIns.setVisibility(View.GONE);
 
         balls = new boolean[3];
         countBalls = 0;
@@ -191,6 +215,7 @@ public class MatchActivity extends AppCompatActivity {
                 tvN1.setVisibility(View.GONE);
                 tvN2.setVisibility(View.GONE);
                 ivInstructs.setVisibility(View.VISIBLE);
+                btnIns.setVisibility(View.VISIBLE);
                 ivBox2.setVisibility(View.VISIBLE);
                 btnStart.setVisibility(View.GONE);
                 btnLaunch.setVisibility(View.VISIBLE);
@@ -198,6 +223,25 @@ public class MatchActivity extends AppCompatActivity {
                 tvBalls.setVisibility(View.VISIBLE);
                 layoutButtons.setVisibility(View.VISIBLE);
                 showDialog("Appuie sur suivant quand c'est à ton tour de jouer." + "\n" + "Le chrono se lancera automatiquement.", "", "Suivant", R.style.DialogTheme);
+            }
+        });
+
+        btnIns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ins) {
+                    ivInstructs.setVisibility(View.GONE);
+                    ivBox2.setVisibility(View.GONE);
+                    layoutButtons.setVisibility(View.GONE);
+                    layoutButtonsBig.setVisibility(View.VISIBLE);
+                    ins = !ins;
+                } else {
+                    ivInstructs.setVisibility(View.VISIBLE);
+                    ivBox2.setVisibility(View.VISIBLE);
+                    layoutButtons.setVisibility(View.VISIBLE);
+                    layoutButtonsBig.setVisibility(View.GONE);
+                    ins = !ins;
+                }
             }
         });
 
@@ -226,57 +270,45 @@ public class MatchActivity extends AppCompatActivity {
         });
 
         btnDown.setOnTouchListener((view, motionEvent) -> {
+            doBtnDown((ImageButton) view, motionEvent);
+            return false;
+        });
 
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                btnDown.setImageResource(R.drawable.arrow_down_clicked); //sets a different image when the button is clicked
-                UDPSend("move:down"); //sends a message to the server
-                UDPReceive();
-
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                btnDown.setImageResource(R.drawable.arrow_down); //sets the original image back when the button is unclicked
-                UDPSend("move:stop:down");
-            }
+        btnDownBig.setOnTouchListener((view, motionEvent) -> {
+            doBtnDown((ImageButton) view, motionEvent);
             return false;
         });
 
         btnUp.setOnTouchListener((view, motionEvent) -> {
+            doBtnUp((ImageButton) view, motionEvent);
+            return false;
+        });
 
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                btnUp.setImageResource(R.drawable.arrow_up_clicked);
-                UDPSend("move:up");
-                UDPReceive();
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                btnUp.setImageResource(R.drawable.arrow_up);
-                UDPSend("move:stop:up");
-            }
+        btnUpBig.setOnTouchListener((view, motionEvent) -> {
+            doBtnUp((ImageButton) view, motionEvent);
             return false;
         });
 
         btnLeft.setOnTouchListener((view, motionEvent) -> {
+            doBtnLeft((ImageButton) view, motionEvent);
+            return false;
+        });
 
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                btnLeft.setImageResource(R.drawable.arrow_left_clicked);
-                UDPSend("move:left");
-                UDPReceive();
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                btnLeft.setImageResource(R.drawable.arrow_left);
-                UDPSend("move:stop:left");
-            }
+        btnLeftBig.setOnTouchListener((view, motionEvent) -> {
+            doBtnLeft((ImageButton) view, motionEvent);
             return false;
         });
 
         btnRight.setOnTouchListener((view, motionEvent) -> {
-
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                btnRight.setImageResource(R.drawable.arrow_right_clicked);
-                UDPSend("move:righ");
-                UDPReceive();
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                btnRight.setImageResource(R.drawable.arrow_right);
-                UDPSend("move:stop:righ");
-            }
+            doBtnRight((ImageButton) view, motionEvent);
             return false;
         });
+
+        btnRightBig.setOnTouchListener((view, motionEvent) -> {
+            doBtnRight((ImageButton) view, motionEvent);
+            return false;
+        });
+
     }
 
     /**
@@ -366,7 +398,54 @@ public class MatchActivity extends AppCompatActivity {
             layoutButtons.setVisibility(View.GONE);
             btnCall.setVisibility(View.GONE);
             tvBalls.setVisibility(View.GONE);
+            layoutButtonsBig.setVisibility(View.GONE);
+            btnIns.setVisibility(View.GONE);
             ivEnd.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void doBtnDown(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_down_clicked); //sets a different image when the button is clicked
+            UDPSend("move:down"); //sends a message to the server
+            UDPReceive();
+
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_down); //sets the original image back when the button is unclicked
+            UDPSend("move:stop:down");
+        }
+    }
+
+    public void doBtnUp(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_up_clicked);
+            UDPSend("move:up");
+            UDPReceive();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_up);
+            UDPSend("move:stop:up");
+        }
+    }
+
+    public void doBtnLeft(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_left_clicked);
+            UDPSend("move:left");
+            UDPReceive();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_left);
+            UDPSend("move:stop:left");
+        }
+    }
+
+    public void doBtnRight(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_right_clicked);
+            UDPSend("move:righ");
+            UDPReceive();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_right);
+            UDPSend("move:stop:righ");
         }
     }
 
@@ -410,6 +489,4 @@ public class MatchActivity extends AppCompatActivity {
             Log.i(TAG, "connecté");
         }
     }
-
-
 }

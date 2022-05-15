@@ -21,4 +21,14 @@
     <string name="mode_aleatoire">MODE ALEATOIRE</string>
     <string name="button_next">Essaye d\'atteindre la position ! \n \n Appuie sur le bouton ci-contre pour changer de position</string>
     <string name="descr_bouton_rand">Bouton rond rouge avec deux flèches transparentes pour changer la position aléatoire</string>
+    <string name="position_1">Position 1 :</string>
+    <string name="bouton_rond_avec_un_symbole_play_dedans">Bouton rond avec un symbole play dedans</string>
+    <string name="bouton_poubelle">Bouton poubelle</string>
+    <string name="position_2">Position 2 :</string>
+    <string name="position_3">Position 3 :</string>
+    <string name="position_4">Position 4 :</string>
+    <string name="bouton_information">Bouton information</string>
+    <string name="te_voici_dans_le_mode">TE VOICI DANS LE MODE</string>
+    <string name="debut_match">AVANT DE LANCER LA PARTIE : Appuie sur le bouton Arrêt d’urgence ou Appel à l’arbitre en cas de besoin Tu disposes de 3 minutes pour effectuer tes 3 tirs Appuie sur suivant pour démarrer la partie</string>
+    <string name="instructions_match">Choisis la hauteur du plateau et la direction de la rampe à l’aide des flèches directionnelles Ensuite, tire ta balle Appuie sur le bouton FINI !</string>
 </resources>

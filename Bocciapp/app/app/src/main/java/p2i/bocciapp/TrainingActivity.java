@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,32 @@ public class TrainingActivity extends AppCompatActivity {
     TextView tvHeightUp;
     TextView tvRand;
 
+    TextView tvPos1;
+    TextView tvPos2;
+    TextView tvPos3;
+    TextView tvPos4;
+
+    ImageButton btnPlay1;
+    ImageButton btnPlay2;
+    ImageButton btnPlay3;
+    ImageButton btnPlay4;
+    ImageButton btnDel1;
+    ImageButton btnDel2;
+    ImageButton btnDel3;
+    ImageButton btnDel4;
+
+    TableLayout tablePos;
+
     Graphics graphics;
+
+    int anglePos1;
+    int heightPos1;
+    int anglePos2;
+    int heightPos2;
+    int anglePos3;
+    int heightPos3;
+    int anglePos4;
+    int heightPos4;
 
     int progressHeight;
     int progressAngle;
@@ -141,6 +167,24 @@ public class TrainingActivity extends AppCompatActivity {
         layoutControls = (LinearLayout) findViewById(R.id.layoutControls);
         //layoutControls.setVisibility(View.GONE);
 
+        tvPos1 = (TextView) findViewById(R.id.tvPos1);
+        tvPos2 = (TextView) findViewById(R.id.tvPos2);
+        tvPos3 = (TextView) findViewById(R.id.tvPos3);
+        tvPos4 = (TextView) findViewById(R.id.tvPos4);
+
+        btnPlay1 = (ImageButton) findViewById(R.id.btnPlay1);
+        btnPlay2 = (ImageButton) findViewById(R.id.btnPlay2);
+        btnPlay3 = (ImageButton) findViewById(R.id.btnPlay3);
+        btnPlay4 = (ImageButton) findViewById(R.id.btnPlay4);
+
+        btnDel1 = (ImageButton) findViewById(R.id.btnDel1);
+        btnDel2 = (ImageButton) findViewById(R.id.btnDel2);
+        btnDel3 = (ImageButton) findViewById(R.id.btnDel3);
+        btnDel4 = (ImageButton) findViewById(R.id.btnDel4);
+
+        tablePos = (TableLayout) findViewById(R.id.tablePos);
+        tablePos.setVisibility(View.GONE);
+
         layoutRand = (LinearLayout) findViewById(R.id.layoutRand);
         layoutRand.setVisibility(View.GONE);
 
@@ -176,18 +220,19 @@ public class TrainingActivity extends AppCompatActivity {
             }
         });
 
+        btnLaunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO : what's that again i dont really know but you gotta do it someday buddy
+            }
+        });
+
         btnRandMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 graphics.setVisibility(View.VISIBLE);
                 layoutRand.setVisibility(View.VISIBLE);
-            }
-        });
-
-        btnPosMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+                tablePos.setVisibility(View.GONE);
             }
         });
 
@@ -202,6 +247,71 @@ public class TrainingActivity extends AppCompatActivity {
                 }
 
                 return false;
+            }
+        });
+
+        btnPosMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tablePos.setVisibility(View.VISIBLE);
+                graphics.setVisibility(View.GONE);
+                layoutRand.setVisibility(View.GONE);
+            }
+        });
+
+        btnPlay1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnPlay((ImageButton) view);
+            }
+        });
+
+        btnDel1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnDel((ImageButton) view);
+            }
+        });
+
+        btnPlay2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnPlay((ImageButton) view);
+            }
+        });
+
+        btnDel2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnDel((ImageButton) view);
+            }
+        });
+
+        btnPlay3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnPlay((ImageButton) view);
+            }
+        });
+
+        btnDel3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnDel((ImageButton) view);
+            }
+        });
+
+        btnPlay4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnPlay((ImageButton) view);
+            }
+        });
+
+        btnDel4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBtnDel((ImageButton) view);
             }
         });
 
@@ -273,6 +383,7 @@ public class TrainingActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 progress = i;
                 progressHeight = progress;
+                updateTextView(tvHeightUp, progressHeight);
             }
 
             @Override
@@ -282,7 +393,6 @@ public class TrainingActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                updateTextView(tvHeightUp, progressHeight);
 
             }
         });
@@ -294,6 +404,7 @@ public class TrainingActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 progress = i;
                 progressAngle = progress;
+                updateTextView(tvAngleUp, progressAngle);
             }
 
             @Override
@@ -303,10 +414,76 @@ public class TrainingActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                updateTextView(tvAngleUp, progressAngle);
 
             }
         });
+    }
+
+    public void doBtnPlay(ImageButton v) {
+        if (v == btnPlay1) {
+            if (tvPos1.getText().equals("")) {
+                tvPos1.setText(tvAngleUp.getText() + " ; " + tvHeightUp.getText());
+                anglePos1 = progressAngle;
+                heightPos1 = progressHeight;
+            } else {
+                setRampPos(anglePos1, heightPos1);
+            }
+        }
+        if (v == btnPlay2) {
+            if (tvPos2.getText().equals("")) {
+                tvPos2.setText(tvAngleUp.getText() + " ; " + tvHeightUp.getText());
+                anglePos2 = progressAngle;
+                heightPos2 = progressHeight;
+            } else {
+                setRampPos(anglePos2, heightPos2);
+            }
+        }
+        if (v == btnPlay3) {
+            if (tvPos3.getText().equals("")) {
+                tvPos3.setText(tvAngleUp.getText() + " ; " + tvHeightUp.getText());
+                anglePos3 = progressAngle;
+                heightPos3 = progressHeight;
+            } else {
+                setRampPos(anglePos3, heightPos3);
+            }
+        }
+        if (v == btnPlay4) {
+            if (tvPos4.getText().equals("")) {
+                tvPos4.setText(tvAngleUp.getText() + " ; " + tvHeightUp.getText());
+                anglePos4 = progressAngle;
+                heightPos4 = progressHeight;
+            } else {
+                setRampPos(anglePos4, heightPos4);
+            }
+        }
+    }
+
+    public void doBtnDel(ImageButton v) {
+        if (v == btnDel1) {
+            tvPos1.setText("");
+            anglePos1 = 0;
+            heightPos1 = 0;
+        }
+        if (v == btnDel2) {
+            tvPos2.setText("");
+            anglePos2 = 0;
+            heightPos2 = 0;
+        }
+        if (v == btnDel3) {
+            tvPos3.setText("");
+            anglePos3 = 0;
+            heightPos3 = 0;
+        }
+        if (v == btnDel4) {
+            tvPos4.setText("");
+            anglePos4 = 0;
+            heightPos4 = 0;
+        }
+    }
+
+    public void setRampPos(int angle, int height) {
+        //TODO : send UDP message to set ramp to a specific position
+        Log.i(TAG, "ramp pos : " + angle + "   " + height);
     }
 
     /**

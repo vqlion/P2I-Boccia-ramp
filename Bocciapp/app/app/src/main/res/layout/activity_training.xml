@@ -250,8 +250,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/graphics"
         app:layout_constraintTop_toTopOf="@+id/graphics"
-        app:layout_constraintVertical_bias="0.05"
-        tools:visibility="gone">
+        app:layout_constraintVertical_bias="0.05">
 
         <TextView
             android:id="@+id/textView"
@@ -312,6 +311,187 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layoutControls"
         app:layout_constraintVertical_bias="0.289"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
+
+    <TableLayout
+        android:id="@+id/tablePos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/layoutControls"
+        app:layout_constraintEnd_toStartOf="@+id/btnPosMode"
+        app:layout_constraintStart_toEndOf="@+id/layoutControls"
+        app:layout_constraintTop_toTopOf="@+id/layoutControls"
+        app:layout_constraintVertical_bias="0.32999998"
+        tools:visibility="gone">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_1"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPos1"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnPlay1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_rond_avec_un_symbole_play_dedans"
+                app:srcCompat="@drawable/ic_baseline_play_circle_filled_24" />
+
+            <ImageButton
+                android:id="@+id/btnDel1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_poubelle"
+                app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="80dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_2"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPos2"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnPlay2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_rond_avec_un_symbole_play_dedans"
+                app:srcCompat="@drawable/ic_baseline_play_circle_filled_24" />
+
+            <ImageButton
+                android:id="@+id/btnDel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_poubelle"
+                app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="80dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_3"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPos3"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnPlay3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_rond_avec_un_symbole_play_dedans"
+                app:srcCompat="@drawable/ic_baseline_play_circle_filled_24" />
+
+            <ImageButton
+                android:id="@+id/btnDel3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_poubelle"
+                app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="80dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_4"
+                android:textColor="#FAFAFA"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPos4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnPlay4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_rond_avec_un_symbole_play_dedans"
+                app:srcCompat="@drawable/ic_baseline_play_circle_filled_24" />
+
+            <ImageButton
+                android:id="@+id/btnDel4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/bouton_poubelle"
+                app:srcCompat="@drawable/ic_baseline_delete_24" />
+        </TableRow>
+    </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
