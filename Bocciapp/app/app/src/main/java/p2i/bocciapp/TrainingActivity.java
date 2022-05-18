@@ -338,6 +338,7 @@ public class TrainingActivity extends AppCompatActivity {
                 timerHandler.postDelayed(timerRunnablePlusHeight, longPressTimeout);
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibPlusHeight.setImageResource(R.drawable.plus); //sets the original image back when the button is unclicked
+                if (!modePos) setHeightPos(progressHeight);
                 timerHandler.removeCallbacks(timerRunnablePlusHeight);
             }
             return false;
@@ -353,6 +354,7 @@ public class TrainingActivity extends AppCompatActivity {
                 timerHandler.postDelayed(timerRunnablePlusAngle, longPressTimeout);
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibPlusAngle.setImageResource(R.drawable.plus); //sets the original image back when the button is unclicked
+                if (!modePos) setAnglePos(progressAngle);
                 timerHandler.removeCallbacks(timerRunnablePlusAngle);
             }
             return false;
@@ -369,6 +371,7 @@ public class TrainingActivity extends AppCompatActivity {
 
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibMinusHeight.setImageResource(R.drawable.minus); //sets the original image back when the button is unclicked
+                if (!modePos) setHeightPos(progressHeight);
                 timerHandler.removeCallbacks(timerRunnableMinusHeight);
             }
             return false;
@@ -384,6 +387,7 @@ public class TrainingActivity extends AppCompatActivity {
                 timerHandler.postDelayed(timerRunnableMinusAngle, longPressTimeout);
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibMinusAngle.setImageResource(R.drawable.minus); //sets the original image back when the button is unclicked
+                if (!modePos) setAnglePos(progressAngle);
                 timerHandler.removeCallbacks(timerRunnableMinusAngle);
             }
             return false;
@@ -434,6 +438,7 @@ public class TrainingActivity extends AppCompatActivity {
 
     /**
      * Method to execute when a play button is pressed
+     *
      * @param v button pressed
      */
     @SuppressLint("SetTextI18n")
@@ -478,6 +483,7 @@ public class TrainingActivity extends AppCompatActivity {
 
     /**
      * Method to execute when a delete button is pressed
+     *
      * @param v button pressed
      */
     public void doBtnDel(ImageButton v) {
@@ -505,7 +511,8 @@ public class TrainingActivity extends AppCompatActivity {
 
     /**
      * Sends UDP message to the ramp with a specific height and angle
-     * @param angle the angle the ramp should move to
+     *
+     * @param angle  the angle the ramp should move to
      * @param height the height the ramp sould be at
      */
     public void setRampPos(int angle, int height) {
@@ -517,6 +524,7 @@ public class TrainingActivity extends AppCompatActivity {
 
     /**
      * Sends UDP message to the ramp with a spcific angle
+     *
      * @param angle the angle the ramp should move to
      */
     public void setAnglePos(int angle) {
@@ -528,6 +536,7 @@ public class TrainingActivity extends AppCompatActivity {
 
     /**
      * Sends UDP message to the ramp with a specific height
+     *
      * @param height the heihgt the ramp should be at
      */
     public void setHeightPos(int height) {

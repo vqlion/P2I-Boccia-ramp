@@ -41,6 +41,7 @@ public class MatchActivity extends AppCompatActivity {
     Button btnLaunch;
     Button btnCall;
     Button btnStop;
+    Button btnLaunchBig;
 
     ImageButton btnDown;
     ImageButton btnUp;
@@ -136,6 +137,8 @@ public class MatchActivity extends AppCompatActivity {
 
         btnLaunch = (Button) findViewById(R.id.btnLaunch);
         btnLaunch.setVisibility(View.GONE);
+        btnLaunchBig = (Button) findViewById(R.id.btnLaunchBig);
+        btnLaunchBig.setVisibility(View.GONE);
 
         tvBalls = (TextView) findViewById(R.id.tvBalls);
         tvBalls.setVisibility(View.GONE);
@@ -230,39 +233,21 @@ public class MatchActivity extends AppCompatActivity {
                     ivBox2.setVisibility(View.GONE);
                     layoutButtons.setVisibility(View.GONE);
                     layoutButtonsBig.setVisibility(View.VISIBLE);
+                    btnLaunchBig.setVisibility(View.VISIBLE);
                 } else {
                     ivInstructs.setVisibility(View.VISIBLE);
                     ivBox2.setVisibility(View.VISIBLE);
                     layoutButtons.setVisibility(View.VISIBLE);
                     layoutButtonsBig.setVisibility(View.GONE);
+                    btnLaunchBig.setVisibility(View.GONE);
                 }
                 ins = !ins;
             }
         });
 
-        btnLaunch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UDPSend("laun:laun");
-                //checks whether it can remove a ball from the array, and does it as well as updating the UI
-                if (countBalls < balls.length) {
-                    balls[countBalls] = true;
-                    showToast("Lance ta balle !", Toast.LENGTH_SHORT);
-                    showDialog("Le chrono est mis en pause." + "\n" + "\n" + "Appuie sur suivant lorsque c'est à ton tour", "Suivant", "", R.style.DialogTheme);
-                    startPause();
-                    if (balls[0]) {
-                        ivBall3.setImageResource(R.drawable.boccia_ball_vide);
-                    }
-                    if (balls[1]) {
-                        ivBall2.setImageResource(R.drawable.boccia_ball_vide);
-                    }
-                    if (balls[2]) {
-                        ivBall1.setImageResource(R.drawable.boccia_ball_vide);
-                    }
-                    countBalls++;
-                }
-            }
-        });
+        btnLaunch.setOnClickListener(view -> doBtnLaunch());
+
+        btnLaunchBig.setOnClickListener(view -> doBtnLaunch());
 
         btnDown.setOnTouchListener((view, motionEvent) -> {
             doBtnDown((ImageButton) view, motionEvent);
@@ -340,13 +325,15 @@ public class MatchActivity extends AppCompatActivity {
             tvBalls.setVisibility(View.GONE);
             layoutButtonsBig.setVisibility(View.GONE);
             btnIns.setVisibility(View.GONE);
+            btnLaunchBig.setVisibility(View.GONE);
             ivEnd.setVisibility(View.VISIBLE);
         }
     }
 
     /**
      * Method to execute when a down button is pressed
-     * @param view button pressed
+     *
+     * @param view        button pressed
      * @param motionEvent MotionEvent of the press
      */
     public void doBtnDown(ImageButton view, MotionEvent motionEvent) {
@@ -363,7 +350,8 @@ public class MatchActivity extends AppCompatActivity {
 
     /**
      * Method to execute when a up button is pressed
-     * @param view button pressed
+     *
+     * @param view        button pressed
      * @param motionEvent MotionEvent of the press
      */
     public void doBtnUp(ImageButton view, MotionEvent motionEvent) {
@@ -379,7 +367,8 @@ public class MatchActivity extends AppCompatActivity {
 
     /**
      * Method to execute when a left button is pressed
-     * @param view button pressed
+     *
+     * @param view        button pressed
      * @param motionEvent MotionEvent of the press
      */
     public void doBtnLeft(ImageButton view, MotionEvent motionEvent) {
@@ -395,7 +384,8 @@ public class MatchActivity extends AppCompatActivity {
 
     /**
      * Method to execute when a right button is pressed
-     * @param view button pressed
+     *
+     * @param view        button pressed
      * @param motionEvent MotionEvent of the press
      */
     public void doBtnRight(ImageButton view, MotionEvent motionEvent) {
@@ -406,6 +396,30 @@ public class MatchActivity extends AppCompatActivity {
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             view.setImageResource(R.drawable.arrow_right);
             UDPSend("move:stop:righ");
+        }
+    }
+
+    /**
+     * Method to execute when a launch button is pressed
+     */
+    public void doBtnLaunch() {
+        UDPSend("laun:laun");
+        //checks whether it can remove a ball from the array, and does it as well as updating the UI
+        if (countBalls < balls.length) {
+            balls[countBalls] = true;
+            showToast("Lance ta balle !", Toast.LENGTH_SHORT);
+            showDialog("Le chrono est mis en pause." + "\n" + "\n" + "Appuie sur suivant lorsque c'est à ton tour", "Suivant", "", R.style.DialogTheme);
+            startPause();
+            if (balls[0]) {
+                ivBall3.setImageResource(R.drawable.boccia_ball_vide);
+            }
+            if (balls[1]) {
+                ivBall2.setImageResource(R.drawable.boccia_ball_vide);
+            }
+            if (balls[2]) {
+                ivBall1.setImageResource(R.drawable.boccia_ball_vide);
+            }
+            countBalls++;
         }
     }
 

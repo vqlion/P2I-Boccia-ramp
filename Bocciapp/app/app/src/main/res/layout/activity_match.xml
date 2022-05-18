@@ -15,18 +15,20 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/ic_baseline_info_24"
         android:backgroundTint="#00FFFFFF"
+        android:contentDescription="@string/bouton_information"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintHorizontal_bias="0.84"
         app:layout_constraintStart_toEndOf="@+id/btnStop"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_info_24"
-        android:contentDescription="@string/bouton_information" />
+        tools:ignore="ImageContrastCheck"
+        tools:visibility="gone" />
 
     <Button
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="#D84559"
         android:text="@string/suivant"
         android:textColor="#FFFFFF"
@@ -54,7 +56,7 @@
     <Button
         android:id="@+id/btnStop"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_marginStart="32dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#D84559"
@@ -150,7 +152,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -163,7 +165,7 @@
         <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:backgroundTint="#D84559"
             android:text="@string/retour"
             android:textColor="#FFFFFF"
@@ -171,12 +173,12 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="70dp" />
 
         <Button
             android:id="@+id/btnCall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:backgroundTint="#D84559"
             android:text="@string/arbitre"
             android:textColor="#FFFFFF"
@@ -231,8 +233,8 @@
     <Button
         android:id="@+id/btnLaunch"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="#D84559"
         android:text="@string/fini"
         android:textColor="#FFFFFF"
@@ -240,8 +242,7 @@
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0"
-        tools:visibility="invisible" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tvN1"
@@ -260,8 +261,7 @@
         app:layout_constraintBottom_toTopOf="@+id/ivBox"
         app:layout_constraintEnd_toEndOf="@+id/ivBox"
         app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toStartOf="@+id/ivBox"
-        tools:visibility="gone" />
+        app:layout_constraintStart_toStartOf="@+id/ivBox" />
 
     <TextView
         android:id="@+id/tvN2"
@@ -281,8 +281,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/tvN1"
         app:layout_constraintTop_toBottomOf="@+id/tvN1"
-        app:layout_constraintVertical_bias="0.0"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/ivBox"
@@ -295,15 +294,15 @@
         app:layout_constraintHorizontal_bias="0.28"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.69"
+        app:layout_constraintVertical_bias="0.6"
         app:srcCompat="@drawable/yellow_box"
-        tools:visibility="gone"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/ivN1"
         android:layout_width="483dp"
         android:layout_height="160dp"
+        android:contentDescription="@string/debut_match"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/ivBox"
         app:layout_constraintEnd_toEndOf="@+id/ivBox"
@@ -311,9 +310,7 @@
         app:layout_constraintStart_toStartOf="@+id/ivBox"
         app:layout_constraintTop_toBottomOf="@+id/tvN2"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/avant_de_lancer"
-        tools:visibility="gone"
-        android:contentDescription="@string/debut_match" />
+        app:srcCompat="@drawable/avant_de_lancer" />
 
     <ImageView
         android:id="@+id/ivBox2"
@@ -351,7 +348,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
 
         <ImageButton
             android:id="@+id/btnLeftBig"
@@ -360,7 +358,7 @@
             android:layout_weight="1"
             android:background="#00000000"
             app:srcCompat="@drawable/arrow_left"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -374,7 +372,7 @@
                 android:layout_height="192dp"
                 android:background="#00FFFFFF"
                 app:srcCompat="@drawable/arrow_up"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/btnDownBig"
@@ -382,7 +380,7 @@
                 android:layout_height="192dp"
                 android:background="#00FFFFFF"
                 app:srcCompat="@drawable/arrow_down"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
         </LinearLayout>
 
         <ImageButton
@@ -392,7 +390,19 @@
             android:layout_weight="1"
             android:background="#00FFFFFF"
             app:srcCompat="@drawable/arrow_right"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLaunchBig"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:text="@string/fini"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnStop"
+        app:layout_constraintEnd_toStartOf="@+id/btnStart"
+        app:layout_constraintHorizontal_bias="0.674"
+        app:layout_constraintStart_toEndOf="@+id/btnStop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
