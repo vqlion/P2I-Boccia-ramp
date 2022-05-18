@@ -73,11 +73,6 @@ void loop() {
     Serial.println(reply);
     Udp.endPacket();
 
-    /*
-      digitalWrite(LED_BUILTIN, HIGH);
-      delay(50);
-      digitalWrite(LED_BUILTIN, LOW); */
-
     String messageNode = "";
     messageNode += msgCode[0];
     messageNode += msgCode[1];

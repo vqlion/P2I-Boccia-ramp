@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Context context = this;
 
     public static int PORT = 5000; //port used by the server
-    public static String address = "192.168.53.242"; //IP address of the server
+    public static String address = "192.168.53.233"; //IP address of the server
 
 
     @Override

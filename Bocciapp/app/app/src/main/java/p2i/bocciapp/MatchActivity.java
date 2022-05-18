@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -21,8 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.net.*;
 
@@ -58,7 +55,6 @@ public class MatchActivity extends AppCompatActivity {
     LinearLayout layoutButtonsBig;
 
     ImageButton btnIns;
-
     boolean ins;
 
     TextView tvBalls;
@@ -234,14 +230,13 @@ public class MatchActivity extends AppCompatActivity {
                     ivBox2.setVisibility(View.GONE);
                     layoutButtons.setVisibility(View.GONE);
                     layoutButtonsBig.setVisibility(View.VISIBLE);
-                    ins = !ins;
                 } else {
                     ivInstructs.setVisibility(View.VISIBLE);
                     ivBox2.setVisibility(View.VISIBLE);
                     layoutButtons.setVisibility(View.VISIBLE);
                     layoutButtonsBig.setVisibility(View.GONE);
-                    ins = !ins;
                 }
+                ins = !ins;
             }
         });
 
@@ -312,6 +307,109 @@ public class MatchActivity extends AppCompatActivity {
     }
 
     /**
+     * Pauses the timer
+     */
+    private void startPause() {
+        timerHandler.removeCallbacks(timerRunnable);
+        millisStartPause = System.currentTimeMillis() - startTime;
+    }
+
+    /**
+     * Unpauses the timer
+     */
+    private void endPause() {
+        millisEndPause = System.currentTimeMillis() - startTime;
+        millisDiff += millisEndPause - millisStartPause;
+        timerHandler.postDelayed(timerRunnable, 0);
+    }
+
+    /**
+     * Checks if the game is supposed to be finished. Displays the ending screen if it is
+     *
+     * @param force can be set to true to force the end of the game even if all the balls haven't been thrown
+     */
+    private void endGame(boolean force) {
+        if (countBalls >= balls.length || force) {
+            ivInstructs.setVisibility(View.GONE);
+            ivBox2.setVisibility(View.GONE);
+            layoutBalls.setVisibility(View.GONE);
+            tvTimer.setVisibility(View.GONE);
+            btnLaunch.setVisibility(View.GONE);
+            layoutButtons.setVisibility(View.GONE);
+            btnCall.setVisibility(View.GONE);
+            tvBalls.setVisibility(View.GONE);
+            layoutButtonsBig.setVisibility(View.GONE);
+            btnIns.setVisibility(View.GONE);
+            ivEnd.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Method to execute when a down button is pressed
+     * @param view button pressed
+     * @param motionEvent MotionEvent of the press
+     */
+    public void doBtnDown(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_down_clicked); //sets a different image when the button is clicked
+            UDPSend("move:down"); //sends a message to the server
+            UDPReceive();
+
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_down); //sets the original image back when the button is unclicked
+            UDPSend("move:stop:down");
+        }
+    }
+
+    /**
+     * Method to execute when a up button is pressed
+     * @param view button pressed
+     * @param motionEvent MotionEvent of the press
+     */
+    public void doBtnUp(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_up_clicked);
+            UDPSend("move:up");
+            UDPReceive();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_up);
+            UDPSend("move:stop:up");
+        }
+    }
+
+    /**
+     * Method to execute when a left button is pressed
+     * @param view button pressed
+     * @param motionEvent MotionEvent of the press
+     */
+    public void doBtnLeft(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_left_clicked);
+            UDPSend("move:left");
+            UDPReceive();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_left);
+            UDPSend("move:stop:left");
+        }
+    }
+
+    /**
+     * Method to execute when a right button is pressed
+     * @param view button pressed
+     * @param motionEvent MotionEvent of the press
+     */
+    public void doBtnRight(ImageButton view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            view.setImageResource(R.drawable.arrow_right_clicked);
+            UDPSend("move:righ");
+            UDPReceive();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            view.setImageResource(R.drawable.arrow_right);
+            UDPSend("move:stop:righ");
+        }
+    }
+
+    /**
      * Shows a toast on top of the app
      *
      * @param text   text to display in the toast
@@ -367,89 +465,6 @@ public class MatchActivity extends AppCompatActivity {
     }
 
     /**
-     * Pauses the timer
-     */
-    private void startPause() {
-        timerHandler.removeCallbacks(timerRunnable);
-        millisStartPause = System.currentTimeMillis() - startTime;
-    }
-
-    /**
-     * Unpauses the timer
-     */
-    private void endPause() {
-        millisEndPause = System.currentTimeMillis() - startTime;
-        millisDiff += millisEndPause - millisStartPause;
-        timerHandler.postDelayed(timerRunnable, 0);
-    }
-
-    /**
-     * Checks if the game is supposed to be finished. Displays the ending screen if it is
-     *
-     * @param force can be set to true to force the end of the game even if all the balls haven't been thrown
-     */
-    private void endGame(boolean force) {
-        if (countBalls >= balls.length || force) {
-            ivInstructs.setVisibility(View.GONE);
-            ivBox2.setVisibility(View.GONE);
-            layoutBalls.setVisibility(View.GONE);
-            tvTimer.setVisibility(View.GONE);
-            btnLaunch.setVisibility(View.GONE);
-            layoutButtons.setVisibility(View.GONE);
-            btnCall.setVisibility(View.GONE);
-            tvBalls.setVisibility(View.GONE);
-            layoutButtonsBig.setVisibility(View.GONE);
-            btnIns.setVisibility(View.GONE);
-            ivEnd.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void doBtnDown(ImageButton view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            view.setImageResource(R.drawable.arrow_down_clicked); //sets a different image when the button is clicked
-            UDPSend("move:down"); //sends a message to the server
-            UDPReceive();
-
-        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            view.setImageResource(R.drawable.arrow_down); //sets the original image back when the button is unclicked
-            UDPSend("move:stop:down");
-        }
-    }
-
-    public void doBtnUp(ImageButton view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            view.setImageResource(R.drawable.arrow_up_clicked);
-            UDPSend("move:up");
-            UDPReceive();
-        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            view.setImageResource(R.drawable.arrow_up);
-            UDPSend("move:stop:up");
-        }
-    }
-
-    public void doBtnLeft(ImageButton view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            view.setImageResource(R.drawable.arrow_left_clicked);
-            UDPSend("move:left");
-            UDPReceive();
-        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            view.setImageResource(R.drawable.arrow_left);
-            UDPSend("move:stop:left");
-        }
-    }
-
-    public void doBtnRight(ImageButton view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            view.setImageResource(R.drawable.arrow_right_clicked);
-            UDPSend("move:righ");
-            UDPReceive();
-        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            view.setImageResource(R.drawable.arrow_right);
-            UDPSend("move:stop:righ");
-        }
-    }
-
-    /**
      * Sends a UDP message to a specified server. The server is specified in the MainActivity and the socket is open in the onCreate method.
      *
      * @param m message sent to the server via UDP protocol
@@ -485,7 +500,7 @@ public class MatchActivity extends AppCompatActivity {
     public void fetchReceive(byte[] b) {
         serverMessage = new String(b);
         Log.i(TAG, "message reçu par le serveur : " + serverMessage);
-        if (serverMessage.substring(0, 5).equals("open:")) {
+        if (serverMessage.startsWith("open:")) {
             Log.i(TAG, "connecté");
         }
     }

@@ -14,7 +14,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.*;
+import java.util.Objects;
 
 public class TrainingActivity extends AppCompatActivity {
 
@@ -29,7 +29,6 @@ public class TrainingActivity extends AppCompatActivity {
 
     Button btnBack;
     Button btnStop;
-    Button btnLaunch;
     Button btnRandMode;
     Button btnPosMode;
     ImageButton btnChangeRand;
@@ -83,6 +82,11 @@ public class TrainingActivity extends AppCompatActivity {
     int updateValuesTimeout = 150;
     int longPressTimeout = 800;
 
+    boolean mode;
+    boolean modePos;
+    boolean heightMoving;
+    boolean angleMoving;
+
     InetAddress host;
     static DatagramSocket UDPSocket;
     String serverMessage;
@@ -129,7 +133,7 @@ public class TrainingActivity extends AppCompatActivity {
         }
     };
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +144,6 @@ public class TrainingActivity extends AppCompatActivity {
 
         btnBack = (Button) findViewById(R.id.btnBackA);
         btnStop = (Button) findViewById(R.id.btnStopA);
-        btnLaunch = (Button) findViewById(R.id.btnLaunchA);
         btnRandMode = (Button) findViewById(R.id.btnRandMode);
         btnPosMode = (Button) findViewById(R.id.btnPosMode);
         btnChangeRand = (ImageButton) findViewById(R.id.btnChangeRand);
@@ -153,6 +156,8 @@ public class TrainingActivity extends AppCompatActivity {
 
         sbAngle = (SeekBar) findViewById(R.id.sbAngle);
         sbHeight = (SeekBar) findViewById(R.id.sbHeight);
+        sbAngle.setMax(99);
+        sbHeight.setMax(99);
 
         tvHeight = (TextView) findViewById(R.id.tvHeight);
         tvAngle = (TextView) findViewById(R.id.tvAngle);
@@ -194,6 +199,9 @@ public class TrainingActivity extends AppCompatActivity {
         tvHeightUp.setText(" " + progressHeight);
         tvAngleUp.setText(" " + progressAngle);
 
+        mode = false;
+        modePos = false;
+
         //starts the UDP communication (socket) with the server specified in address
         try {
             UDPSocket = new DatagramSocket();
@@ -201,14 +209,22 @@ public class TrainingActivity extends AppCompatActivity {
             UDPSend("open:train:");
             UDPReceive();
         } catch (Exception e) {
-            Log.e(TAG, "error socket  " + e.getCause().toString());
+            Log.e(TAG, "error socket  " + Objects.requireNonNull(e.getCause()));
         }
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UDPSocket.close();
-                finish();
+                if (mode) {
+                    tablePos.setVisibility(View.GONE);
+                    graphics.setVisibility(View.GONE);
+                    layoutRand.setVisibility(View.GONE);
+                    mode = false;
+                    modePos = false;
+                } else {
+                    UDPSocket.close();
+                    finish();
+                }
             }
         });
 
@@ -220,19 +236,14 @@ public class TrainingActivity extends AppCompatActivity {
             }
         });
 
-        btnLaunch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO : what's that again i dont really know but you gotta do it someday buddy
-            }
-        });
-
         btnRandMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 graphics.setVisibility(View.VISIBLE);
                 layoutRand.setVisibility(View.VISIBLE);
                 tablePos.setVisibility(View.GONE);
+                mode = true;
+                modePos = false;
             }
         });
 
@@ -256,6 +267,8 @@ public class TrainingActivity extends AppCompatActivity {
                 tablePos.setVisibility(View.VISIBLE);
                 graphics.setVisibility(View.GONE);
                 layoutRand.setVisibility(View.GONE);
+                mode = true;
+                modePos = true;
             }
         });
 
@@ -393,7 +406,7 @@ public class TrainingActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (!modePos) setHeightPos(progressHeight);
             }
         });
 
@@ -414,11 +427,16 @@ public class TrainingActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (!modePos) setAnglePos(progressAngle);
             }
         });
     }
 
+    /**
+     * Method to execute when a play button is pressed
+     * @param v button pressed
+     */
+    @SuppressLint("SetTextI18n")
     public void doBtnPlay(ImageButton v) {
         if (v == btnPlay1) {
             if (tvPos1.getText().equals("")) {
@@ -458,6 +476,10 @@ public class TrainingActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to execute when a delete button is pressed
+     * @param v button pressed
+     */
     public void doBtnDel(ImageButton v) {
         if (v == btnDel1) {
             tvPos1.setText("");
@@ -481,9 +503,38 @@ public class TrainingActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sends UDP message to the ramp with a specific height and angle
+     * @param angle the angle the ramp should move to
+     * @param height the height the ramp sould be at
+     */
     public void setRampPos(int angle, int height) {
-        //TODO : send UDP message to set ramp to a specific position
+        setAnglePos(angle);
+        setHeightPos(height);
+        showToast("Ne changez pas la position de la rampe jusqu'à ce qu'elle s'arrête", Toast.LENGTH_SHORT);
         Log.i(TAG, "ramp pos : " + angle + "   " + height);
+    }
+
+    /**
+     * Sends UDP message to the ramp with a spcific angle
+     * @param angle the angle the ramp should move to
+     */
+    public void setAnglePos(int angle) {
+        String a = "angl:";
+        a += angle < 10 ? 0 : angle / 10;
+        a += "ten:" + angle % 10;
+        UDPSend(a);
+    }
+
+    /**
+     * Sends UDP message to the ramp with a specific height
+     * @param height the heihgt the ramp should be at
+     */
+    public void setHeightPos(int height) {
+        String h = "heig:";
+        h += height < 10 ? 0 : height / 10;
+        h += "ten:" + height % 10;
+        UDPSend(h);
     }
 
     /**
@@ -492,8 +543,20 @@ public class TrainingActivity extends AppCompatActivity {
      * @param t textview to update
      * @param n content of the textview
      */
+    @SuppressLint("SetTextI18n")
     private void updateTextView(TextView t, int n) {
         t.setText(" " + n);
+    }
+
+    /**
+     * Shows a toast on top of the app
+     *
+     * @param text   text to display in the toast
+     * @param length length duration of the toast
+     */
+    private void showToast(String text, int length) {
+        Toast toast = Toast.makeText(getApplicationContext(), text, length);
+        toast.show();
     }
 
     /**
@@ -535,7 +598,7 @@ public class TrainingActivity extends AppCompatActivity {
                     UDPSocket.send(packet);
                     Log.d(TAG, "apres send");
                 } catch (Exception e) {
-                    Log.e(TAG, "error send  " + e.getCause().toString());
+                    Log.e(TAG, "error send  " + Objects.requireNonNull(e.getCause()));
                 }
             }
         };

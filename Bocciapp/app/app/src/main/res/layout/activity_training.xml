@@ -31,18 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="TextContrastCheck" />
 
-    <Button
-        android:id="@+id/btnLaunchA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/fini"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnBackA"
-        app:layout_constraintStart_toStartOf="@+id/btnBackA"
-        tools:ignore="TextContrastCheck" />
-
     <LinearLayout
         android:id="@+id/layoutControls"
         android:layout_width="wrap_content"
@@ -217,12 +205,12 @@
         android:layout_height="wrap_content"
         android:text="@string/mode_aleatoire"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btnLaunchA"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnBackA"
-        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="@+id/btnBackA"
         app:layout_constraintTop_toBottomOf="@+id/btnBackA"
-        app:layout_constraintVertical_bias="0.64"
+        app:layout_constraintVertical_bias="0.498"
         tools:ignore="TextContrastCheck" />
 
     <Button
@@ -231,12 +219,12 @@
         android:layout_height="wrap_content"
         android:text="@string/mode_positions"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btnLaunchA"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnBackA"
-        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="@+id/btnBackA"
         app:layout_constraintTop_toBottomOf="@+id/btnBackA"
-        app:layout_constraintVertical_bias="0.32999998"
+        app:layout_constraintVertical_bias="0.267"
         tools:ignore="TextContrastCheck" />
 
     <LinearLayout

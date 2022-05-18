@@ -86,3 +86,4 @@ lint/tmp/
 
 **/desktop.ini
 Bocciapp/app/.idea/gradle.xml
+Bocciapp/app/.idea/misc.xml

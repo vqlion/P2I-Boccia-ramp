@@ -15,6 +15,15 @@ int valA, valB;
 Encoder encA(2, 5);
 Encoder encB(6, 7);
 
+int errorA, errorH;
+float kpAngle = 25;
+float kpHeight = 25;
+float t1 = 0;
+float t2 = 0;
+float dt;
+
+int targetAngle, targetHeight;
+
 //motors pins
 const int PWN_A = 3;
 const int PWN_B = 11;
@@ -48,16 +57,21 @@ void setup() {
   led(BLACK);
   analogWrite(11, 0);
   analogWrite(3, 0);
+  Serial.println("connected");
 }
 
 void loop() {
+  t2 = millis();
+  dt = t2 - t1;
+  t1 = t2;
+
   valA = encA.read();          // read position
   valB = encB.read();
   /* Serial.print(millis()); // print the position
-  Serial.print(" ; ");
-  Serial.print(valA);
-  Serial.print(" ; ");
-  Serial.println(valB); */
+    Serial.print(" ; ");
+    Serial.print(valA);
+    Serial.print(" ; ");
+    Serial.println(valB); */
 
 
   if (messageNode.length() == 3) {
@@ -65,7 +79,30 @@ void loop() {
   }
 
   switch (msgCode[0]) {
+    case 's':  //stops the robot (emergency stop or call)
+      motors(PWN_A, 0);
+      motors(PWN_B, 0);
+      switch (msgCode[1]) {
+        case 'c':
+          led(RED);
+          break;
+      }
+      break;
+  }
 
+  getMode();
+
+  if (match) {
+    controlMatch();
+  } else {
+    controlTrain();
+    regulateAngle();
+    regulateHeight();
+  }
+}
+
+void getMode() {
+  switch (msgCode[0]) {
     case 'o':
       switch (msgCode[1]) {
         case 'm':
@@ -76,15 +113,11 @@ void loop() {
           break;
       }
       break;
-    case 's':  //stops the robot (emergency stop or call)
-      motors(PWN_A, 0, HIGH);
-      motors(PWN_B, 0, HIGH);
-      switch (msgCode[1]) {
-        case 'c':
-          led(RED);
-          break;
-      }
-      break;
+  }
+}
+
+void controlMatch() {
+  switch (msgCode[0]) {
     case 'c':
       led(BLACK);
       break;
@@ -93,39 +126,72 @@ void loop() {
         case 's':
           switch (msgCode[2]) {
             case 'l' : case 'r' :
-              motors(PWN_A, 0, HIGH);
+              motors(PWN_A, 0);
               break;
             case 'u': case 'd':
-              motors(PWN_B, 0, HIGH);
+              motors(PWN_B, 0);
               break;
           }
           break;
         case 'l':
-          motors(PWN_A, 100, HIGH);
+          motors(PWN_A, 255);
           break;
         case 'r':
-          motors(PWN_A, 100, LOW);
+          motors(PWN_A, -255);
           break;
         case 'u':
-          motors(PWN_B, 100, HIGH);
+          motors(PWN_B, 255);
           break;
         case 'd':
-          motors(PWN_B, 100, LOW);
+          motors(PWN_B, -255);
           break;
       }
       break;
   }
-
 }
 
-void motors(int motor, int value, int dir) {
+void controlTrain() {
+  String strA = "";
+  String strH = "";
+  switch (msgCode[0]) {
+    case 'a' :
+      strA += msgCode[1];
+      strA += msgCode[2];
+      targetAngle = strA.toInt();
+      regulateAngle();
+      break;
+    case 'h':
+      strH += msgCode[1];
+      strH += msgCode[2];
+      targetHeight = strH.toInt();
+      regulateHeight();
+      break;
+  }
+}
+
+void regulateAngle() {
+  errorA = targetAngle - valA;
+  motors(PWN_A, kpAngle * errorA);
+}
+
+void regulateHeight() {
+  errorH = targetHeight - valB;
+  motors(PWN_B, kpHeight * errorH);
+}
+
+
+void motors(int motor, int value) {
+  int dir;
+  dir = value > 0 ? HIGH : LOW;
+  value = value > 255 ? 255 : value;
+  value = value < -255 ? -255 : value;
   switch (motor) {
     case PWN_A:
-      analogWrite(PWN_A, value);
+      analogWrite(PWN_A, abs(value));
       digitalWrite(DIR_A, dir);
       break;
     case PWN_B:
-      analogWrite(PWN_B, value);
+      analogWrite(PWN_B, abs(value));
       digitalWrite(DIR_B, dir);
       break;
   }
