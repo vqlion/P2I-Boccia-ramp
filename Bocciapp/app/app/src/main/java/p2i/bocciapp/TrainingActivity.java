@@ -64,6 +64,8 @@ public class TrainingActivity extends AppCompatActivity {
     ImageButton btnDel3;
     ImageButton btnDel4;
 
+    ImageButton btnCalibrate;
+
     TableLayout tablePos;
 
     Graphics graphics;
@@ -187,6 +189,8 @@ public class TrainingActivity extends AppCompatActivity {
         btnDel3 = (ImageButton) findViewById(R.id.btnDel3);
         btnDel4 = (ImageButton) findViewById(R.id.btnDel4);
 
+        btnCalibrate = (ImageButton) findViewById(R.id.btnCalibrate);
+
         tablePos = (TableLayout) findViewById(R.id.tablePos);
         tablePos.setVisibility(View.GONE);
 
@@ -233,6 +237,13 @@ public class TrainingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 showDialog("La machine a été arretée." + "\n" + "\n" + "Appuie sur OK pour relancer la machine.", "OK", R.style.DialogThemeAlert);
                 UDPSend("stop:stop");
+            }
+        });
+
+        btnCalibrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UDPSend("rset:rset");
             }
         });
 

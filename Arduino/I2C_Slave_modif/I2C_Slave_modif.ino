@@ -4,16 +4,28 @@
    The code for the I2C part is mainly inspired by cunchem https://github.com/cunchem/I2C_esp8266ToArduinoUno
 */
 
-
 #include <Wire.h>
 #include <Encoder.h>
+#include <ezButton.h>
+
+ezButton switchAngle1(27);  // create ezButton object that attach to pin;
+ezButton switchAngle2(29);
+ezButton switchHeight1(23);
+ezButton switchHeight2(25);
+
+const int VERY_BIG = 10000;
+
+boolean calibAngle, calibHeight;
+int encAngleMin, encAngleMax;
+int encHeightMin, encHeightMax;
+int commandCalAngle, commandCalHeight;
 
 const byte BLACK = 0b111;
 const byte RED = 0b010;
 
-int valA, valB;
+int valA, valH;
 Encoder encA(2, 5);
-Encoder encB(6, 7);
+Encoder encH(6, 7);
 
 int errorA, errorH;
 float kpAngle = 25;
@@ -26,9 +38,9 @@ int targetAngle, targetHeight;
 
 //motors pins
 const int PWN_A = 3;
-const int PWN_B = 11;
+const int PWN_H = 11;
 const int DIR_A = 12;
-const int DIR_B = 13;
+const int DIR_H = 13;
 
 //RGB led pins
 const byte PIN_LED_R = 35;
@@ -46,42 +58,68 @@ void setup() {
   Wire.onRequest(requestEvent); /* register request event */
   Serial.begin(115200);           /* start serial for debug */
   encA.write(0);
-  encB.write(0);
-  pinMode(12, OUTPUT);    //pin Direction A
-  pinMode(3, OUTPUT);    //pin PWM A
-  pinMode(13, OUTPUT);  //pin Direction B
-  pinMode(11, OUTPUT);  //pin PWN B
+  encH.write(0);
+  pinMode(DIR_A, OUTPUT);    //pin Direction A
+  pinMode(PWN_A, OUTPUT);    //pin PWM A
+  pinMode(DIR_H, OUTPUT);  //pin Direction H
+  pinMode(PWN_H, OUTPUT);  //pin PWN H
   pinMode(PIN_LED_R, OUTPUT);
   pinMode(PIN_LED_G, OUTPUT);
   pinMode(PIN_LED_B, OUTPUT);
   led(BLACK);
-  analogWrite(11, 0);
-  analogWrite(3, 0);
-  Serial.println("connected");
+  analogWrite(PWN_A, 0);
+  analogWrite(PWN_H, 0);
+  switchAngle1.setDebounceTime(50);
+  switchAngle2.setDebounceTime(50);
+  switchHeight1.setDebounceTime(50);
+  switchHeight2.setDebounceTime(50);
+  commandCalAngle = 100;
+  commandCalHeight = 100;
+  calibAngle = false;
+  calibHeight = false;
+  Serial.println("MEGA connected");
 }
 
 void loop() {
+  switchAngle1.loop();
+  switchAngle2.loop();
+  switchHeight1.loop();
+  switchHeight2.loop();
+
   t2 = millis();
   dt = t2 - t1;
   t1 = t2;
 
-  valA = encA.read();          // read position
-  valB = encB.read();
+  valA = encA.read();          // read positions of the encoders
+  valH = encH.read();
   /* Serial.print(millis()); // print the position
     Serial.print(" ; ");
     Serial.print(valA);
     Serial.print(" ; ");
-    Serial.println(valB); */
+    Serial.println(valH); */
 
+  if (messageNode.length() == 3) messageNode = decodeMessage(messageNode);
 
-  if (messageNode.length() == 3) {
-    messageNode = decodeMessage(messageNode);
+  checkStop();
+  if (msgCode[0] == 'r') calibrate();
+
+  getMode();
+  if (match) {
+    controlMatch();
+  } else {
+    controlTrain();
+    regulateAngle();
+    regulateHeight();
   }
+}
 
+void checkStop() {
   switch (msgCode[0]) {
     case 's':  //stops the robot (emergency stop or call)
       motors(PWN_A, 0);
-      motors(PWN_B, 0);
+      motors(PWN_H, 0);
+      targetAngle = VERY_BIG;
+      targetHeight = VERY_BIG;
       switch (msgCode[1]) {
         case 'c':
           led(RED);
@@ -89,15 +127,37 @@ void loop() {
       }
       break;
   }
+}
 
-  getMode();
+void calibrate() {
+  motors(PWN_A, commandCalAngle);
+  motors(PWN_H, commandCalHeight);
+  if (switchAngle1.isPressed()) {
+    encAngleMin = valA;
+    commandCalAngle = -100;
+  }
+  if (switchHeight1.isPressed()) {
+    encHeightMin = valH;
+    commandCalHeight = -100;
+  }
 
-  if (match) {
-    controlMatch();
-  } else {
-    controlTrain();
-    regulateAngle();
-    regulateHeight();
+  if (switchHeight2.isPressed()) {
+    encHeightMax = valH;
+    commandCalHeight = 10;
+    motors(PWN_H, commandCalHeight);
+    calibHeight = true;
+  }
+  if (switchAngle2.isPressed()) {
+    encAngleMax = valA;
+    commandCalAngle = 10;
+    motors(PWN_A, commandCalAngle);
+    calibAngle = true;
+  }
+
+  if (calibAngle && calibHeight) {
+    msgCode[0] = 'z';
+    motors(PWN_A, 0);
+    motors(PWN_H, 0);
   }
 }
 
@@ -129,7 +189,7 @@ void controlMatch() {
               motors(PWN_A, 0);
               break;
             case 'u': case 'd':
-              motors(PWN_B, 0);
+              motors(PWN_H, 0);
               break;
           }
           break;
@@ -140,10 +200,10 @@ void controlMatch() {
           motors(PWN_A, -255);
           break;
         case 'u':
-          motors(PWN_B, 255);
+          motors(PWN_H, 255);
           break;
         case 'd':
-          motors(PWN_B, -255);
+          motors(PWN_H, -255);
           break;
       }
       break;
@@ -158,27 +218,32 @@ void controlTrain() {
       strA += msgCode[1];
       strA += msgCode[2];
       targetAngle = strA.toInt();
+      targetAngle = map(targetAngle, 0, 99, encAngleMin, encAngleMax);
       regulateAngle();
       break;
     case 'h':
       strH += msgCode[1];
       strH += msgCode[2];
       targetHeight = strH.toInt();
+      targetHeight = map(targetHeight, 0, 99, encHeightMin, encHeightMax);
       regulateHeight();
       break;
   }
 }
 
 void regulateAngle() {
-  errorA = targetAngle - valA;
-  motors(PWN_A, kpAngle * errorA);
+  if (targetAngle < VERY_BIG) {
+    errorA = targetAngle - valA;
+    motors(PWN_A, kpAngle * errorA);
+  }
 }
 
 void regulateHeight() {
-  errorH = targetHeight - valB;
-  motors(PWN_B, kpHeight * errorH);
+  if (targetHeight < VERY_BIG) {
+    errorH = targetHeight - valH;
+    motors(PWN_H, kpHeight * errorH);
+  }
 }
-
 
 void motors(int motor, int value) {
   int dir;
@@ -190,9 +255,9 @@ void motors(int motor, int value) {
       analogWrite(PWN_A, abs(value));
       digitalWrite(DIR_A, dir);
       break;
-    case PWN_B:
-      analogWrite(PWN_B, abs(value));
-      digitalWrite(DIR_B, dir);
+    case PWN_H:
+      analogWrite(PWN_H, abs(value));
+      digitalWrite(DIR_H, dir);
       break;
   }
 }

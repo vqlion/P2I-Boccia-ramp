@@ -299,7 +299,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layoutControls"
         app:layout_constraintVertical_bias="0.289"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <TableLayout
         android:id="@+id/tablePos"
@@ -481,5 +481,15 @@
                 app:srcCompat="@drawable/ic_baseline_delete_24" />
         </TableRow>
     </TableLayout>
+
+    <ImageButton
+        android:id="@+id/btnCalibrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnRandMode"
+        app:srcCompat="@drawable/ic_baseline_build_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

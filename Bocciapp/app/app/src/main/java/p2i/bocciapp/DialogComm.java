@@ -58,8 +58,4 @@ public class DialogComm extends Dialog {
         }
         dismiss();
     }
-
-
 }
-
-
