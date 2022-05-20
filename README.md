@@ -13,7 +13,7 @@ More details on wiring [here](Figures).
 The boards are setup like so :
 
 
-![Diagram of the arduino circuits](https://user-images.githubusercontent.com/104720049/168095988-07d786b5-369e-4047-b0d3-6df3f65470c4.jpg)
+![Diagram of the arduino circuits](https://user-images.githubusercontent.com/104720049/169611251-0a82dc34-8386-4231-b798-ba25f5f7b2ab.jpg)
 
 
 I used EMG30 motors from Robot Electronics. The arduino code is able to support the 2 motors in direction and PWN, as well as get the encoder position from each motor.
