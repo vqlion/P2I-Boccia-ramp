@@ -12,9 +12,7 @@ The android app is made to send information via internet to an arduino ESP8266 o
 More details on wiring [here](Figures).
 The boards are setup like so :
 
-
-![Diagram of the arduino circuits](https://user-images.githubusercontent.com/104720049/169611251-0a82dc34-8386-4231-b798-ba25f5f7b2ab.jpg)
-
+![Diagram of the arduino circuits](https://user-images.githubusercontent.com/104720049/169897455-f617e0f3-e191-45a9-a5c4-88b6c73fb103.jpg)
 
 I used EMG30 motors from Robot Electronics. The arduino code is able to support the 2 motors in direction and PWN, as well as get the encoder position from each motor.
 You can use any DC motor if you don't need the encoder position, just ignore the Hall sensor pins.
