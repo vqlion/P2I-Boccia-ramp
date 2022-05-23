@@ -2,12 +2,10 @@ package p2i.bocciapp;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -81,7 +79,7 @@ public class MatchActivity extends AppCompatActivity {
 
     View baseView;
 
-    Handler timerHandler = new Handler();
+    Handler handler = new Handler();
     Runnable timerRunnable = new Runnable() {
 
         @Override
@@ -96,7 +94,7 @@ public class MatchActivity extends AppCompatActivity {
             } else if (minutes < 100000) {
                 endGame(true);
             }
-            timerHandler.postDelayed(this, 500);
+            handler.postDelayed(this, 500);
         }
     };
 
@@ -295,7 +293,7 @@ public class MatchActivity extends AppCompatActivity {
      * Pauses the timer
      */
     private void startPause() {
-        timerHandler.removeCallbacks(timerRunnable);
+        handler.removeCallbacks(timerRunnable);
         millisStartPause = System.currentTimeMillis() - startTime;
     }
 
@@ -305,7 +303,7 @@ public class MatchActivity extends AppCompatActivity {
     private void endPause() {
         millisEndPause = System.currentTimeMillis() - startTime;
         millisDiff += millisEndPause - millisStartPause;
-        timerHandler.postDelayed(timerRunnable, 0);
+        handler.postDelayed(timerRunnable, 0);
     }
 
     /**
@@ -341,7 +339,6 @@ public class MatchActivity extends AppCompatActivity {
             view.setImageResource(R.drawable.arrow_down_clicked); //sets a different image when the button is clicked
             UDPSend("move:down"); //sends a message to the server
             UDPReceive();
-
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             view.setImageResource(R.drawable.arrow_down); //sets the original image back when the button is unclicked
             UDPSend("move:stop:down");
@@ -469,7 +466,7 @@ public class MatchActivity extends AppCompatActivity {
                             dialog.cancel();
 
                             startTime = System.currentTimeMillis();
-                            timerHandler.postDelayed(timerRunnable, 0); //starts the timer for the first time
+                            handler.postDelayed(timerRunnable, 0); //starts the timer for the first time
                         }
                     });
         }

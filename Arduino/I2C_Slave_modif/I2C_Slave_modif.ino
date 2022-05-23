@@ -7,15 +7,20 @@
 #include <Wire.h>
 #include <Encoder.h>
 #include <ezButton.h>
+#include <limits.h>
 
 ezButton switchAngle1(27);  // create ezButton object that attach to pin;
 ezButton switchAngle2(29);
 ezButton switchHeight1(23);
 ezButton switchHeight2(25);
 
-const int VERY_BIG = 10000;
+ezButton emerButton(24);
+int stateEmer;
+boolean forceStop;
 
-boolean calibAngle, calibHeight;
+const int VERY_BIG = INT_MAX;
+
+boolean calibAngleMax, calibAngleMin, calibHeightMax, calibHeightMin, firstCalib;
 int encAngleMin, encAngleMax;
 int encHeightMin, encHeightMax;
 int commandCalAngle, commandCalHeight;
@@ -28,8 +33,8 @@ Encoder encA(2, 5);
 Encoder encH(6, 7);
 
 int errorA, errorH;
-float kpAngle = 25;
-float kpHeight = 25;
+float kpAngle = 12;
+float kpHeight = 12;
 float t1 = 0;
 float t2 = 0;
 float dt;
@@ -73,10 +78,15 @@ void setup() {
   switchAngle2.setDebounceTime(50);
   switchHeight1.setDebounceTime(50);
   switchHeight2.setDebounceTime(50);
-  commandCalAngle = 100;
-  commandCalHeight = 100;
-  calibAngle = false;
-  calibHeight = false;
+  emerButton.setDebounceTime(50);
+  commandCalAngle = 50;
+  commandCalHeight = 50;
+  calibAngleMax = false;
+  calibAngleMin = false;
+  calibHeightMax = false;
+  calibHeightMin = false;
+  firstCalib = true;
+  forceStop = false;
   Serial.println("MEGA connected");
 }
 
@@ -85,6 +95,9 @@ void loop() {
   switchAngle2.loop();
   switchHeight1.loop();
   switchHeight2.loop();
+  emerButton.loop();
+
+  stateEmer = emerButton.getState();
 
   t2 = millis();
   dt = t2 - t1;
@@ -100,21 +113,32 @@ void loop() {
 
   if (messageNode.length() == 3) messageNode = decodeMessage(messageNode);
 
+  if (stateEmer == LOW) forceStop = false;
   checkStop();
-  if (msgCode[0] == 'r') calibrate();
+  if (msgCode[0] == 'r' || !firstCalib) calibrate();
 
   getMode();
   if (match) {
     controlMatch();
   } else {
     controlTrain();
-    regulateAngle();
-    regulateHeight();
+    regulateAngle(targetAngle);
+    regulateHeight(targetHeight);
   }
 }
 
 void checkStop() {
-  switch (msgCode[0]) {
+  if (msgCode[0] == 's' || stateEmer == HIGH) {
+    msgCode[0] = 's';
+    motors(PWN_A, 0);
+    motors(PWN_H, 0);
+    targetAngle = VERY_BIG;
+    targetHeight = VERY_BIG;
+    forceStop = true;
+    if (msgCode[1] == 'c') led(RED);
+  }
+
+  /* switch (msgCode[0]) {
     case 's':  //stops the robot (emergency stop or call)
       motors(PWN_A, 0);
       motors(PWN_H, 0);
@@ -126,38 +150,50 @@ void checkStop() {
           break;
       }
       break;
-  }
+    } */
 }
 
 void calibrate() {
+  targetAngle = VERY_BIG;
+  targetHeight = VERY_BIG;
   motors(PWN_A, commandCalAngle);
   motors(PWN_H, commandCalHeight);
   if (switchAngle1.isPressed()) {
     encAngleMin = valA;
-    commandCalAngle = -100;
+    commandCalAngle = -commandCalAngle;
+    if (calibAngleMax) commandCalAngle = 0;
+    calibAngleMin = true;
   }
   if (switchHeight1.isPressed()) {
     encHeightMin = valH;
-    commandCalHeight = -100;
+    commandCalHeight = -commandCalHeight;
+    if (calibHeightMax) commandCalHeight = 0;
+    calibHeightMin = true;
   }
 
   if (switchHeight2.isPressed()) {
     encHeightMax = valH;
-    commandCalHeight = 10;
-    motors(PWN_H, commandCalHeight);
-    calibHeight = true;
+    commandCalHeight = -commandCalHeight;
+    if (calibHeightMin) commandCalHeight = 0;
+    calibHeightMax = true;
   }
   if (switchAngle2.isPressed()) {
     encAngleMax = valA;
-    commandCalAngle = 10;
-    motors(PWN_A, commandCalAngle);
-    calibAngle = true;
+    commandCalAngle = -commandCalAngle;
+    if (calibAngleMin) commandCalAngle = 0;
+    calibAngleMax = true;
   }
 
-  if (calibAngle && calibHeight) {
+  if (calibAngleMax && calibHeightMax && calibAngleMin && calibHeightMin) {
+    Serial.println("i got there");
     msgCode[0] = 'z';
-    motors(PWN_A, 0);
-    motors(PWN_H, 0);
+    firstCalib = true;
+    calibAngleMax = false;
+    calibAngleMin = false;
+    calibHeightMax = false;
+    calibHeightMin = false;
+    motors(PWN_A, commandCalAngle);
+    motors(PWN_H, commandCalHeight);
   }
 }
 
@@ -194,16 +230,32 @@ void controlMatch() {
           }
           break;
         case 'l':
-          motors(PWN_A, 255);
+          switch (msgCode[2]) {
+            case 'a':
+              motors(PWN_A, 255);
+              break;
+          }
           break;
         case 'r':
-          motors(PWN_A, -255);
+          switch (msgCode[2]) {
+            case 'a':
+              motors(PWN_A, -255);
+              break;
+          }
           break;
         case 'u':
-          motors(PWN_H, 255);
+          switch (msgCode[2]) {
+            case 'a':
+              motors(PWN_H, 255);
+              break;
+          }
           break;
         case 'd':
-          motors(PWN_H, -255);
+          switch (msgCode[2]) {
+            case 'a':
+              motors(PWN_H, -255);
+              break;
+          }
           break;
       }
       break;
@@ -218,47 +270,56 @@ void controlTrain() {
       strA += msgCode[1];
       strA += msgCode[2];
       targetAngle = strA.toInt();
-      targetAngle = map(targetAngle, 0, 99, encAngleMin, encAngleMax);
-      regulateAngle();
+      regulateAngle(targetAngle);
       break;
     case 'h':
       strH += msgCode[1];
       strH += msgCode[2];
       targetHeight = strH.toInt();
-      targetHeight = map(targetHeight, 0, 99, encHeightMin, encHeightMax);
-      regulateHeight();
+      regulateHeight(targetHeight);
       break;
   }
 }
 
-void regulateAngle() {
+void regulateAngle(int target) {
+  target = map(target, 0, 99, encAngleMin, encAngleMax);
   if (targetAngle < VERY_BIG) {
-    errorA = targetAngle - valA;
-    motors(PWN_A, kpAngle * errorA);
+    errorA = target - valA;
+    Serial.print(errorA);
+    Serial.print("  ;  ");
+    Serial.print(target);
+    Serial.print("  ;  ");
+    Serial.print(valA);
+    Serial.print("  ;  ");
+    Serial.println(kpAngle * errorA);
+    motors(PWN_A, -kpAngle * errorA);
   }
 }
 
-void regulateHeight() {
+void regulateHeight(int target) {
+  target = map(target, 0, 99, encHeightMin, encHeightMax);
   if (targetHeight < VERY_BIG) {
-    errorH = targetHeight - valH;
+    errorH = target - valH;
     motors(PWN_H, kpHeight * errorH);
   }
 }
 
 void motors(int motor, int value) {
-  int dir;
-  dir = value > 0 ? HIGH : LOW;
-  value = value > 255 ? 255 : value;
-  value = value < -255 ? -255 : value;
-  switch (motor) {
-    case PWN_A:
-      analogWrite(PWN_A, abs(value));
-      digitalWrite(DIR_A, dir);
-      break;
-    case PWN_H:
-      analogWrite(PWN_H, abs(value));
-      digitalWrite(DIR_H, dir);
-      break;
+  if (!forceStop) {
+    int dir;
+    dir = value > 0 ? HIGH : LOW;
+    value = value > 255 ? 255 : value;
+    value = value < -255 ? -255 : value;
+    switch (motor) {
+      case PWN_A:
+        analogWrite(PWN_A, abs(value));
+        digitalWrite(DIR_A, dir);
+        break;
+      case PWN_H:
+        analogWrite(PWN_H, abs(value));
+        digitalWrite(DIR_H, dir);
+        break;
+    }
   }
 }
 

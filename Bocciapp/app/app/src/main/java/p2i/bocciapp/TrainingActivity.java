@@ -81,8 +81,8 @@ public class TrainingActivity extends AppCompatActivity {
 
     int progressHeight;
     int progressAngle;
-    int updateValuesTimeout = 150;
-    int longPressTimeout = 800;
+    final int VALUES_TIMEOUT = 150;
+    final int LONG_PRESS_TIMEOUT = 800;
 
     boolean mode;
     boolean modePos;
@@ -101,7 +101,7 @@ public class TrainingActivity extends AppCompatActivity {
             progressHeight++;
             updateTextView(tvHeightUp, progressHeight);
             sbHeight.setProgress(progressHeight);
-            timerHandler.postDelayed(this, updateValuesTimeout);
+            timerHandler.postDelayed(this, VALUES_TIMEOUT);
         }
     };
     Runnable timerRunnableMinusHeight = new Runnable() {
@@ -111,7 +111,7 @@ public class TrainingActivity extends AppCompatActivity {
             progressHeight--;
             updateTextView(tvHeightUp, progressHeight);
             sbHeight.setProgress(progressHeight);
-            timerHandler.postDelayed(this, updateValuesTimeout);
+            timerHandler.postDelayed(this, VALUES_TIMEOUT);
         }
     };
     Runnable timerRunnablePlusAngle = new Runnable() {
@@ -121,7 +121,7 @@ public class TrainingActivity extends AppCompatActivity {
             progressAngle++;
             updateTextView(tvAngleUp, progressAngle);
             sbAngle.setProgress(progressAngle);
-            timerHandler.postDelayed(this, updateValuesTimeout);
+            timerHandler.postDelayed(this, VALUES_TIMEOUT);
         }
     };
     Runnable timerRunnableMinusAngle = new Runnable() {
@@ -131,7 +131,7 @@ public class TrainingActivity extends AppCompatActivity {
             progressAngle--;
             updateTextView(tvAngleUp, progressAngle);
             sbAngle.setProgress(progressAngle);
-            timerHandler.postDelayed(this, updateValuesTimeout);
+            timerHandler.postDelayed(this, VALUES_TIMEOUT);
         }
     };
 
@@ -244,6 +244,7 @@ public class TrainingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UDPSend("rset:rset");
+                showToast("Calibrage de la machine. Ne pas changer les paramêtres.", Toast.LENGTH_SHORT);
             }
         });
 
@@ -346,7 +347,7 @@ public class TrainingActivity extends AppCompatActivity {
                 progressHeight++;
                 updateTextView(tvHeightUp, progressHeight);
                 sbHeight.setProgress(progressHeight);
-                timerHandler.postDelayed(timerRunnablePlusHeight, longPressTimeout);
+                timerHandler.postDelayed(timerRunnablePlusHeight, LONG_PRESS_TIMEOUT);
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibPlusHeight.setImageResource(R.drawable.plus); //sets the original image back when the button is unclicked
                 if (!modePos) setHeightPos(progressHeight);
@@ -362,7 +363,7 @@ public class TrainingActivity extends AppCompatActivity {
                 progressAngle++;
                 updateTextView(tvAngleUp, progressAngle);
                 sbAngle.setProgress(progressAngle);
-                timerHandler.postDelayed(timerRunnablePlusAngle, longPressTimeout);
+                timerHandler.postDelayed(timerRunnablePlusAngle, LONG_PRESS_TIMEOUT);
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibPlusAngle.setImageResource(R.drawable.plus); //sets the original image back when the button is unclicked
                 if (!modePos) setAnglePos(progressAngle);
@@ -378,7 +379,7 @@ public class TrainingActivity extends AppCompatActivity {
                 progressHeight--;
                 updateTextView(tvHeightUp, progressHeight);
                 sbHeight.setProgress(progressHeight);
-                timerHandler.postDelayed(timerRunnableMinusHeight, longPressTimeout);
+                timerHandler.postDelayed(timerRunnableMinusHeight, LONG_PRESS_TIMEOUT);
 
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibMinusHeight.setImageResource(R.drawable.minus); //sets the original image back when the button is unclicked
@@ -395,7 +396,7 @@ public class TrainingActivity extends AppCompatActivity {
                 progressAngle--;
                 updateTextView(tvAngleUp, progressAngle);
                 sbAngle.setProgress(progressAngle);
-                timerHandler.postDelayed(timerRunnableMinusAngle, longPressTimeout);
+                timerHandler.postDelayed(timerRunnableMinusAngle, LONG_PRESS_TIMEOUT);
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 ibMinusAngle.setImageResource(R.drawable.minus); //sets the original image back when the button is unclicked
                 if (!modePos) setAnglePos(progressAngle);
