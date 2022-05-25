@@ -14,7 +14,7 @@ ezButton switchAngle2(29);
 ezButton switchHeight1(23);
 ezButton switchHeight2(25);
 
-ezButton emerButton(24);
+ezButton emerButton(33);
 int stateEmer;
 boolean forceStop;
 
@@ -48,9 +48,9 @@ const int DIR_A = 12;
 const int DIR_H = 13;
 
 //RGB led pins
-const byte PIN_LED_R = 35;
-const byte PIN_LED_G = 33;
-const byte PIN_LED_B = 31;
+const byte PIN_LED_R = 49;
+const byte PIN_LED_G = 50;
+const byte PIN_LED_B = 51;
 
 char msgCode[3];
 
