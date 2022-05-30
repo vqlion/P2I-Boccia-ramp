@@ -25,13 +25,16 @@ int encAngleMin, encAngleMax;
 int encHeightMin, encHeightMax;
 int commandCalAngle, commandCalHeight;
 
+//possible colors of the LED
 const byte BLACK = 0b111;
 const byte RED = 0b010;
 
+//encoder related
 int valA, valH;
 Encoder encA(2, 5);
 Encoder encH(6, 7);
 
+//PID related
 int errorA, errorH;
 float kpAngle = 12;
 float kpHeight = 12;
@@ -58,10 +61,10 @@ String messageNode;
 boolean match;
 
 void setup() {
-  Wire.begin(8);                /* join i2c bus with address 8 */
-  Wire.onReceive(receiveEvent); /* register receive event */
-  Wire.onRequest(requestEvent); /* register request event */
-  Serial.begin(115200);           /* start serial for debug */
+  Wire.begin(8);                //join i2c bus with address 8
+  Wire.onReceive(receiveEvent); //register receive event
+  Wire.onRequest(requestEvent); //register request event
+  Serial.begin(115200);           //start serial for debug
   encA.write(0);
   encH.write(0);
   pinMode(DIR_A, OUTPUT);    //pin Direction A
@@ -79,14 +82,15 @@ void setup() {
   switchHeight1.setDebounceTime(50);
   switchHeight2.setDebounceTime(50);
   emerButton.setDebounceTime(50);
-  commandCalAngle = 50;
-  commandCalHeight = 50;
+  commandCalAngle = 100;
+  commandCalHeight = 75;
   calibAngleMax = false;
   calibAngleMin = false;
   calibHeightMax = false;
   calibHeightMin = false;
   firstCalib = true;
   forceStop = false;
+  match = true;
   Serial.println("MEGA connected");
 }
 
@@ -103,13 +107,8 @@ void loop() {
   dt = t2 - t1;
   t1 = t2;
 
-  valA = encA.read();          // read positions of the encoders
+  valA = encA.read();  //read positions of the encoders
   valH = encH.read();
-  /* Serial.print(millis()); // print the position
-    Serial.print(" ; ");
-    Serial.print(valA);
-    Serial.print(" ; ");
-    Serial.println(valH); */
 
   if (messageNode.length() == 3) messageNode = decodeMessage(messageNode);
 
@@ -137,20 +136,7 @@ void checkStop() {
     forceStop = true;
     if (msgCode[1] == 'c') led(RED);
   }
-
-  /* switch (msgCode[0]) {
-    case 's':  //stops the robot (emergency stop or call)
-      motors(PWN_A, 0);
-      motors(PWN_H, 0);
-      targetAngle = VERY_BIG;
-      targetHeight = VERY_BIG;
-      switch (msgCode[1]) {
-        case 'c':
-          led(RED);
-          break;
-      }
-      break;
-    } */
+  if (msgCode[0] == 'c') led(BLACK);
 }
 
 void calibrate() {
@@ -185,7 +171,6 @@ void calibrate() {
   }
 
   if (calibAngleMax && calibHeightMax && calibAngleMin && calibHeightMin) {
-    Serial.println("i got there");
     msgCode[0] = 'z';
     firstCalib = true;
     calibAngleMax = false;
@@ -194,6 +179,8 @@ void calibrate() {
     calibHeightMin = false;
     motors(PWN_A, commandCalAngle);
     motors(PWN_H, commandCalHeight);
+    commandCalAngle = 100;
+    commandCalHeight = 75;
   }
 }
 
@@ -214,9 +201,6 @@ void getMode() {
 
 void controlMatch() {
   switch (msgCode[0]) {
-    case 'c':
-      led(BLACK);
-      break;
     case 'm':  //command to move the motors
       switch (msgCode[1]) {
         case 's':
@@ -232,28 +216,28 @@ void controlMatch() {
         case 'l':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_A, 255);
+              motors(PWN_A, 100);
               break;
           }
           break;
         case 'r':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_A, -255);
+              motors(PWN_A, -100);
               break;
           }
           break;
         case 'u':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_H, 255);
+              motors(PWN_H, 200);
               break;
           }
           break;
         case 'd':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_H, -255);
+              motors(PWN_H, -75);
               break;
           }
           break;
@@ -285,13 +269,6 @@ void regulateAngle(int target) {
   target = map(target, 0, 99, encAngleMin, encAngleMax);
   if (targetAngle < VERY_BIG) {
     errorA = target - valA;
-    Serial.print(errorA);
-    Serial.print("  ;  ");
-    Serial.print(target);
-    Serial.print("  ;  ");
-    Serial.print(valA);
-    Serial.print("  ;  ");
-    Serial.println(kpAngle * errorA);
     motors(PWN_A, -kpAngle * errorA);
   }
 }
@@ -341,15 +318,15 @@ void led(byte color) {
 void receiveEvent(int howMany) {
   messageNode = "";
   while (0 < Wire.available()) {
-    char c = Wire.read();      /* receive byte as a character */
-    Serial.print(c);  /* print the character */
+    char c = Wire.read();      //receive byte as a character
+    Serial.print(c);  //print the character
     messageNode += c;
   }
-  Serial.println();             /* to newline */
+  Serial.println(); //to newline
   delay(50);
 }
 
 // function that executes whenever data is requested from master
 void requestEvent() {
-  Wire.write("Thanks master");  /*send string on request */
+  Wire.write("Thanks master");  //send string on request
 }

@@ -21,8 +21,8 @@ boolean match = true;
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200); /* begin serial for debug */
-  Wire.begin(D1, D2); /* join i2c bus with SDA=D1 and SCL=D2 of NodeMCU */
+  Serial.begin(115200); //begin serial for debug
+  Wire.begin(D1, D2); //join i2c bus with SDA=D1 and SCL=D2 of NodeMCU
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -56,7 +56,7 @@ void loop() {
     messageNode += msgCode[2];
     sendI2C(messageNode);
 
-    Wire.requestFrom(8, 13); /* request & read data of size 13 from slave */
+    Wire.requestFrom(8, 13); //request & read data of size 13 from slave
     while (Wire.available()) {
       char c = Wire.read();
       Serial.print(c);
@@ -84,7 +84,7 @@ void sendI2C(String msg) {
   char buffer[32];
   msg.toCharArray(buffer, 32);
 
-  Wire.beginTransmission(8); /* begin with device address 8 */
-  Wire.write(buffer);  /* sends string message */
-  Wire.endTransmission();    /* stop transmitting */
+  Wire.beginTransmission(8); //begin with device address 8
+  Wire.write(buffer);  //sends string message
+  Wire.endTransmission();    //stop transmitting
 }
