@@ -24,10 +24,12 @@ boolean calibAngleMax, calibAngleMin, calibHeightMax, calibHeightMin, firstCalib
 int encAngleMin, encAngleMax;
 int encHeightMin, encHeightMax;
 int commandCalAngle, commandCalHeight;
+int angle1, angle2, height1, height2;
 
 //possible colors of the LED
 const byte BLACK = 0b111;
-const byte RED = 0b010;
+const byte GREEN = 0b010;
+const byte RED = 0b100;
 
 //encoder related
 int valA, valH;
@@ -88,9 +90,11 @@ void setup() {
   calibAngleMin = false;
   calibHeightMax = false;
   calibHeightMin = false;
-  firstCalib = true;
+  firstCalib = false;
   forceStop = false;
   match = true;
+  targetAngle = 50;
+  targetHeight = 50;
   Serial.println("MEGA connected");
 }
 
@@ -102,6 +106,10 @@ void loop() {
   emerButton.loop();
 
   stateEmer = emerButton.getState();
+  angle1 = switchAngle1.getState();
+  angle2 = switchAngle2.getState();
+  height1 = switchHeight1.getState();
+  height2 = switchHeight2.getState();
 
   t2 = millis();
   dt = t2 - t1;
@@ -114,12 +122,12 @@ void loop() {
 
   if (stateEmer == LOW) forceStop = false;
   checkStop();
-  if (msgCode[0] == 'r' || !firstCalib) calibrate();
+  if (msgCode[0] == 'r') calibrate();
 
   getMode();
   if (match) {
     controlMatch();
-  } else {
+  } else if (firstCalib) {
     controlTrain();
     regulateAngle(targetAngle);
     regulateHeight(targetHeight);
@@ -134,9 +142,10 @@ void checkStop() {
     targetAngle = VERY_BIG;
     targetHeight = VERY_BIG;
     forceStop = true;
-    if (msgCode[1] == 'c') led(RED);
+    led(RED);
+    if (msgCode[1] == 'c') led(GREEN);
   }
-  if (msgCode[0] == 'c') led(BLACK);
+  if (msgCode[0] == 'c' && stateEmer == LOW) led(BLACK);
 }
 
 void calibrate() {
@@ -216,28 +225,28 @@ void controlMatch() {
         case 'l':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_A, 100);
+              motors(PWN_A, -100);
               break;
           }
           break;
         case 'r':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_A, -100);
+              motors(PWN_A, 100);
               break;
           }
           break;
         case 'u':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_H, 200);
+              motors(PWN_H, 100);
               break;
           }
           break;
         case 'd':
           switch (msgCode[2]) {
             case 'a':
-              motors(PWN_H, -75);
+              motors(PWN_H, -50);
               break;
           }
           break;
@@ -285,16 +294,25 @@ void motors(int motor, int value) {
   if (!forceStop) {
     int dir;
     dir = value > 0 ? HIGH : LOW;
-    value = value > 255 ? 255 : value;
-    value = value < -255 ? -255 : value;
+    value = value > 100 ? 100 : value;
+    value = value < -100 ? -100 : value; //keep the command below 100 for safety
     switch (motor) {
       case PWN_A:
-        analogWrite(PWN_A, abs(value));
-        digitalWrite(DIR_A, dir);
+        if ((angle1 == HIGH && angle2 == HIGH) || (angle1 == LOW && value > 0) || (angle2 == LOW && value < 0)) {
+          analogWrite(PWN_A, abs(value));
+          digitalWrite(DIR_A, dir);
+        } else {
+          analogWrite(PWN_A, 0);
+        }
         break;
       case PWN_H:
-        analogWrite(PWN_H, abs(value));
-        digitalWrite(DIR_H, dir);
+        if ((height1 == HIGH && height2 == HIGH) || (height1 == LOW && value > 0) || (height2 == LOW && value < 0)) {
+          value = value < -50 ? -50 : value;
+          analogWrite(PWN_H, abs(value));
+          digitalWrite(DIR_H, dir);
+        } else {
+          analogWrite(PWN_H, 0);
+        }
         break;
     }
   }
