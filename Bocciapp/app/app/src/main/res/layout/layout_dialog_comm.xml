@@ -5,6 +5,27 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <Switch
+        android:id="@+id/switchMatch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="Mode match" />
+
+    <Switch
+        android:id="@+id/switchTraining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="Mode entrainement" />
+
+    <Switch
+        android:id="@+id/switchTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="Timer mode match" />
+
     <EditText
         android:id="@+id/edtAddress"
         android:layout_width="285dp"

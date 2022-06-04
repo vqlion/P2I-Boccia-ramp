@@ -1,10 +1,12 @@
 package p2i.bocciapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,6 +26,9 @@ import java.net.*;
 public class MatchActivity extends AppCompatActivity {
 
     public static final String TAG = "MyLogsMatch"; //this tag is only used to sort the logs I write from the ones the app writes by itself
+
+    public static boolean ENABLE_MATCH = true;
+    public static boolean ENABLE_TIMER = true;
 
     ImageView ivEnd;
     ImageView ivBox;
@@ -91,7 +96,7 @@ public class MatchActivity extends AppCompatActivity {
 
             if (minutes < 3) {
                 tvTimer.setText(" " + String.format("%d:%02d", minutes, seconds) + " ");
-            } else if (minutes < 100000) {
+            } else if (minutes < 100000 && ENABLE_TIMER) {
                 endGame(true);
             }
             handler.postDelayed(this, 500);
@@ -481,19 +486,21 @@ public class MatchActivity extends AppCompatActivity {
      * @param m message sent to the server via UDP protocol
      */
     public void UDPSend(String m) {
-        final byte[] b = m.getBytes();
-        Thread t = new Thread() {
-            public void run() {
-                try {
-                    DatagramPacket packet = new DatagramPacket(b, b.length, host, MainActivity.PORT);
-                    UDPSocket.send(packet);
-                    Log.d(TAG, "apres send");
-                } catch (Exception e) {
-                    Log.e(TAG, "error send  " + e.getCause().toString());
+        if (ENABLE_MATCH) {
+            final byte[] b = m.getBytes();
+            Thread t = new Thread() {
+                public void run() {
+                    try {
+                        DatagramPacket packet = new DatagramPacket(b, b.length, host, MainActivity.PORT);
+                        UDPSocket.send(packet);
+                        Log.d(TAG, "apres send");
+                    } catch (Exception e) {
+                        Log.e(TAG, "error send  " + e.getCause().toString());
+                    }
                 }
-            }
-        };
-        t.start();
+            };
+            t.start();
+        }
     }
 
     /**

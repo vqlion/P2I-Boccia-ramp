@@ -27,6 +27,8 @@ public class TrainingActivity extends AppCompatActivity {
 
     public static final String TAG = "MyLogsTraining"; //this tag is only used to sort the logs I write from the ones the app writes by itself
 
+    public static boolean ENABLE_TRAINING;
+
     Button btnBack;
     Button btnStop;
     Button btnRandMode;
@@ -611,19 +613,21 @@ public class TrainingActivity extends AppCompatActivity {
      * @param m message sent to the server via UDP
      */
     public void UDPSend(String m) {
-        final byte[] b = m.getBytes();
-        Thread t = new Thread() {
-            public void run() {
-                try {
-                    DatagramPacket packet = new DatagramPacket(b, b.length, host, MainActivity.PORT);
-                    UDPSocket.send(packet);
-                    Log.d(TAG, "apres send");
-                } catch (Exception e) {
-                    Log.e(TAG, "error send  " + Objects.requireNonNull(e.getCause()));
+        if (ENABLE_TRAINING) {
+            final byte[] b = m.getBytes();
+            Thread t = new Thread() {
+                public void run() {
+                    try {
+                        DatagramPacket packet = new DatagramPacket(b, b.length, host, MainActivity.PORT);
+                        UDPSocket.send(packet);
+                        Log.d(TAG, "apres send");
+                    } catch (Exception e) {
+                        Log.e(TAG, "error send  " + Objects.requireNonNull(e.getCause()));
+                    }
                 }
-            }
-        };
-        t.start();
+            };
+            t.start();
+        }
     }
 
     /**
