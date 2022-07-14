@@ -8,7 +8,10 @@ The goal of the project is to create an automated [boccia](https://en.wikipedia.
 The android app is made to send information via internet to an arduino ESP8266 on a NodeMCU, which is then connected via I2C to an arduino MEGA2560 with a motor shield rev3 on top of it to control motors.
 
 The project is now ended and the ramp looks like this :
+
 ![3D rendering of the final project](https://user-images.githubusercontent.com/104720049/179034277-a1151e88-6c83-4619-9de4-890944437a8a.png)
+
+With two motors, one at the bottom to rotate the ramp and one on the foot to change the height of the ball, four limit switches (two on the base to limit the rotation and two on the ramp to limit the height), a LED (not visible on this view) and an emergency button on the base.
 
 ## Wiring
 
